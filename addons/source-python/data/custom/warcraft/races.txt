@@ -1,0 +1,53 @@
+--- LEVEL 0 ---
+
+Undead Scourge
+    Vampiric Aura
+    Unholy Aura
+    Levitation
+    Suicide Bomber
+
+Human Alliance
+    Invisibility
+    Cauterize Wounds
+    Frost Bomb
+    Teleport
+
+Orcish Horde
+    Blood Fury
+    Earthgrab Totem
+    Reincarnation
+    Chain Lightning
+
+Night Elf Hunter
+    Shadowmeld
+    Hunters Mark
+    Serpent Sting
+    Wisp Spirit
+
+--- LEVEL 50 ---
+
+Blood Elf Archmage
+    Phoenix
+    Arcane Brilliance
+    Ice Barrier
+    Blizzard
+    Blink
+
+Demon Hunter
+    Double Jump
+    Mana Burn
+    Evasion
+    Demonic Transformation
+
+Dwarf Paladin
+    Stoneskin
+    Hammer Of Justice
+    Holy Light
+    Divine Shield
+
+Flame Predator
+    Berserk
+    Cloak of Invisibility
+    Levitation
+    Claw Attack
+    Burning Blade

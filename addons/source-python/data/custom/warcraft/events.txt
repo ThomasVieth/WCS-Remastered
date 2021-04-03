@@ -1,0 +1,154 @@
+player_kill
+    attacker - The player that caused the kill and caused the event.
+    victim - The player that had died.
+    assister - Any player who assisted the kill. (Available in CSGO)
+    player - The player that caused the kill and caused the event
+
+player_death
+    attacker - The player that caused the kill.
+    victim - The player that had died and caused the event.
+    assister - Any player who assisted the kill. (Available in CSGO)
+    player - The player that had died and caused the event.
+
+player_pre_death
+    attacker - The player that caused the kill.
+    victim - The player that had died and caused the event.
+    player - The player that had died and caused the event.
+    info - The TakeDamageInfo object to manipulate before damage event continues.
+
+player_victim
+    attacker - The player that inflicted the damage.
+    victim - The player that had taken the damage and caused the event.
+    player - The player that had taken the damage and caused the event.
+
+player_attack
+    attacker - The player that inflicted the damage and caused the event.
+    victim - The player that had taken the damage.
+    player - The player that inflicted the damage and caused the event.
+
+player_teammate_victim
+    attacker - The teammate that inflicted the damage.
+    victim - The teammate that had taken the damage and caused the event.
+    player - The teammate that had taken the damage and caused the event.
+
+player_teammate_attack
+    attacker - The teammate that inflicted the damage and caused the event.
+    victim - The teammate that had taken the damage.
+    player - The teammate that inflicted the damage and caused the event.
+    info - The TakeDamageInfo object to manipulate before damage event continues.
+
+player_pre_victim
+    attacker - The player that inflicted the damage.
+    victim - The player that had taken the damage and caused the event.
+    player - The player that had taken the damage and caused the event.
+    info - The TakeDamageInfo object to manipulate before damage event continues.
+
+player_pre_attack
+    attacker - The player that inflicted the damage and caused the event.
+    victim - The player that had taken the damage.
+    player - The player that inflicted the damage and caused the event.
+    info - The TakeDamageInfo object to manipulate before damage event continues.
+
+player_jump
+    player - The player that jumped and caused the event.
+
+player_spawn
+    player - The player that jumped and caused the event.
+
+player_shoot
+    player - The player that shot a weapon.
+    weapon - The index of the weapon fired.
+
+player_use
+    player - The player that "used" an entity.
+    entity - The index of the entity that was "used".
+
+break_prop
+    player - The player that broke the prop entity.
+    entindex - The index of the prop that was broken.
+
+bomb_begindefuse
+    player - The player that is defusing the bomb.
+    haskit - Does the player have a defuse kit? <bool>
+
+bomb_beginplant
+    player - The player that is planting the bomb.
+    site - The index of the site planting at.
+
+bomb_defused
+    player - The player that defused the bomb.
+    site - The index of the site defused at.
+
+bomb_dropped
+    player - The player that dropped the bomb.
+    entindex - The index of the bomb entity.
+
+bomb_exploded
+    player - The player that planted the bomb.
+    site - The index of the site planted at.
+
+bomb_pickup
+    player - The player that picked up the bomb.
+
+bomb_planted
+    player - The player that planted the bomb.
+    site - The index of the site planted at.
+
+silencer_on
+    player - The player that put the silencer on the weapon.
+
+silencer_off
+    player - The player that took the silencer off the weapon.
+
+bullet_impact
+    player - The player that caused the bullet impact.
+    x - The X coordinate of the bullet impact.
+    y - The Y coordinate of the bullet impact.
+    z - The Z coordinate of the bullet impact.
+
+weapon_fire
+    player - The player that fired the weapon.
+    weapon - The string classname of the weapon fired.
+    silenced - Was the weapon silenced? <bool>
+
+weapon_fire_on_empty
+    player - The player that fired the weapon.
+    weapon - The string classname of the weapon fired.
+
+weapon_reload
+    player - The player that reloaded the weapon.
+
+weapon_zoom
+    player - The player that zoomed the weapon.
+
+race_experience_down
+    player - The player that lost experience.
+    race - The race object.
+
+race_experience_up
+    player - The player that gained experience.
+    race - The race object.
+
+race_level_down
+    player - The player that leveled down.
+    race - The race object.
+
+race_level_up
+    player - The player that leveled up.
+    race - The race object.
+
+skill_level_down
+    player - The player that leveled down a skill.
+    race - The race object.
+    skill - The skill object.
+
+skill_level_up
+    player - The player that leveled up a skill.
+    race - The race object.
+    skill - The skill object.
+
+round_start
+    player - The player object.
+
+round_end
+    player - The player object.
