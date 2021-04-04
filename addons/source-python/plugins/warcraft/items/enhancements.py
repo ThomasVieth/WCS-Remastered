@@ -118,7 +118,7 @@ class LeaperPotion(Item):
         send_wcs_saytext_by_index(self._msg_purchase, player.index)
 
     @events('player_jump')
-    def _on_player_spawn(self, player, **kwargs):
+    def _on_player_jump(self, player, **kwargs):
         player.push(100, 100)
 
     @events('player_death')
