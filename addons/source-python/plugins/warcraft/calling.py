@@ -30,13 +30,13 @@ def _on_round_call_events(event_data):
     kwargs = event_data.variables.as_dict()
 
     for player in player_dict.values():
-        player.race.call_events(event_data.name, player=player, **kwargs)
+        player.call_events(event_data.name, player=player, **kwargs)
 
 @Event('player_death')
 def _on_kill_assist_call_events(event_data):
     if event_data['userid'] == event_data['attacker'] or event_data['attacker'] == 0:
         player = player_dict.from_userid(event_data['userid'])
-        player.race.call_events('player_suicide', player=player)
+        player.call_events('player_suicide', player=player)
         return
 
     attacker = player_dict.from_userid(event_data['attacker'])
@@ -45,16 +45,16 @@ def _on_kill_assist_call_events(event_data):
     if 'assister' in event_data.variables and event_data['assister']:
         assister = player_dict.from_userid(event_data['assister'])
 
-    attacker.race.call_events('player_kill', player=attacker, victim=victim,
+    attacker.call_events('player_kill', player=attacker, victim=victim,
         assister=assister)
-    victim.race.call_events('player_death', player=victim, attacker=attacker,
+    victim.call_events('player_death', player=victim, attacker=attacker,
         assister=assister)
     if assister:
-        assister.race.call_events('player_assist', player=assister, attacker=attacker,
+        assister.call_events('player_assist', player=assister, attacker=attacker,
             victim=victim)
 
     for player in player_dict.values():
-        player.race.call_events('any_death', player=victim, attacker=attacker,
+        player.call_events('any_death', player=victim, attacker=attacker,
             victim=victim)
 
 @Event('bomb_dropped', 'bomb_exploded', 'bomb_pickup',
@@ -75,7 +75,7 @@ def _on_personal_call_events(event_data):
         return
     kwargs = event_data.variables.as_dict()
 
-    player.race.call_events(event_data.name, player=player, **kwargs)
+    player.call_events(event_data.name, player=player, **kwargs)
 
 @Event('player_hurt')
 def _on_hurt_call_events(event_data):
@@ -86,15 +86,15 @@ def _on_hurt_call_events(event_data):
     victim = player_dict.from_userid(event_data['userid'])
 
     if victim.team == attacker.team:
-        attacker.race.call_events('player_teammate_attack', player=attacker,
+        attacker.call_events('player_teammate_attack', player=attacker,
             victim=victim, attacker=attacker)
-        victim.race.call_events('player_teammate_victim', player=victim,
+        victim.call_events('player_teammate_victim', player=victim,
             attacker=attacker, victim=victim)
         return
 
-    attacker.race.call_events('player_attack', player=attacker, victim=victim,
+    attacker.call_events('player_attack', player=attacker, victim=victim,
         attacker=attacker)
-    victim.race.call_events('player_victim', player=victim, attacker=attacker,
+    victim.call_events('player_victim', player=victim, attacker=attacker,
         victim=victim)
 
 @EntityPreHook(EntityCondition.is_player, 'on_take_damage')
@@ -114,23 +114,23 @@ def _pre_damage_call_events(stack_data):
 
     if attacker:
         if victim.team == attacker.team:
-            attacker.race.call_events('player_pre_teammate_attack', player=attacker,
+            attacker.call_events('player_pre_teammate_attack', player=attacker,
                 **event_args)
-            victim.race.call_events('player_pre_teammate_victim', player=victim, **event_args)
+            victim.call_events('player_pre_teammate_victim', player=victim, **event_args)
             return
 
-        attacker.race.call_events('player_pre_attack', player=attacker, **event_args)
-        victim.race.call_events('player_pre_victim', player=victim, **event_args)
+        attacker.call_events('player_pre_attack', player=attacker, **event_args)
+        victim.call_events('player_pre_victim', player=victim, **event_args)
 
         if victim.health <= take_damage_info.damage:
-            attacker.race.call_events('player_pre_death', player=victim, **event_args)
+            attacker.call_events('player_pre_death', player=victim, **event_args)
 
 @EntityPreHook(EntityCondition.is_human_player, 'run_command')
 def _pre_run_command_call_events(stack_data):
     player = player_dict[index_from_pointer(stack_data[0])]
     usercmd = make_object(UserCmd, stack_data[1])
 
-    player.race.call_events('player_pre_run_command', player=player, usercmd=usercmd)
+    player.call_events('player_pre_run_command', player=player, usercmd=usercmd)
 
 @ClientCommandFilter
 def _filter_commands_call_events(command, index):

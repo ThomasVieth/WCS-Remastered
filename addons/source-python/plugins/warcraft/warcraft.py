@@ -25,6 +25,10 @@ from warcraft.database import session
 from warcraft.events import Event as WCEvent
 from warcraft.race import Race
 
+## import items first, to load ini data.
+from .items import *
+##load_ini_items()
+
 ## import races first, to load ini data.
 from .races import *
 load_ini_races()
@@ -76,6 +80,12 @@ def _showxp_say_command(command, index, team_only=None):
 @SayCommand("playerinfo")
 def _player_info_say_command(command, index, team_only=None):
     player_info_menu.send(index)
+    return CommandReturn.BLOCK
+
+@ClientCommand("shopmenu")
+@SayCommand("shopmenu")
+def _shop_menu_say_command(command, index, team_only=None):
+    shop_menu.send(index)
     return CommandReturn.BLOCK
 
 @ClientCommand("raceinfo")

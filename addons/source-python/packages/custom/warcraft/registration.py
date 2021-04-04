@@ -31,7 +31,15 @@ class CallbackHandler:
 
 			if hasattr(method, '_clientcommands'):
 				for clientcommand in method._clientcommands:
-					self._clientcommands[clientcommand].add(method)	
+					self._clientcommands[clientcommand].add(method)
+
+	def call_events(self, event_name, *args, **kwargs):
+		for callback in self._events[event_name]:
+			callback(*args, **kwargs)
+
+	def call_clientcommands(self, command_name, *args, **kwargs):
+		for callback in self._clientcommands[command_name]:
+			callback(*args, **kwargs)
 
 ## decoration objects
 

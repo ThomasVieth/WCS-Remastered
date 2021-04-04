@@ -53,12 +53,3 @@ class Skill(Levelable, CallbackHandler, NamingHandler, SubclassFinder):
 		""""""
 		super().level_down(*args, **kwargs)
 		call_event("skill_level_down", [], self.get_event_variables())
-
-	# core functionality
-	def call_events(self, event_name, *args, **kwargs):
-		for callback in self._events[event_name]:
-			callback(*args, **kwargs)
-
-	def call_clientcommands(self, command_name, *args, **kwargs):
-		for callback in self._clientcommands[command_name]:
-			callback(*args, **kwargs)

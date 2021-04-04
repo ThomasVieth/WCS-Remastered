@@ -62,6 +62,8 @@ class Player(SPPlayer):
 
 		debug(playerslog_path, f"Setting up player <{self.name}> data.")
 
+		self.items = list()
+
 	def create_user_data(self):
 		"""
 		Creates a player's initial database object and returns this object.
@@ -179,7 +181,16 @@ class Player(SPPlayer):
 		if self.steamid == 'BOT':
 			return 'BOT_' + self.name
 		return self.steamid
-	
+
+	def call_events(self, event_name, *args, **kwargs):
+		self.race.call_events(event_name, *args, **kwargs)
+		for item in self.items:
+			item.call_events(event_name, *args, **kwargs)
+
+	def call_clientcommands(self, command_name, *args, **kwargs):
+		self.race.call_events(command_name, *args, **kwargs)
+		for item in self.items:
+			item.call_clientcommands(command_name, *args, **kwargs)
 
 ## core
 

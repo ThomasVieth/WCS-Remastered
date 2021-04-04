@@ -94,14 +94,12 @@ class Race(LevelableXP, CallbackHandler, NamingHandler, SubclassFinder):
 		return skill_class
 
 	def call_events(self, event_name, *args, **kwargs):
-		for callback in self._events[event_name]:
-			callback(*args, **kwargs)
+		super().call_events(event_name, *args, **kwargs)
 		for skill in self.skills:
 			skill.call_events(event_name, *args, **kwargs)
 
 	def call_clientcommands(self, command_name, *args, **kwargs):
-		for callback in self._clientcommands[command_name]:
-			callback(*args, **kwargs)
+		super().call_events(command_name, *args, **kwargs)
 		for skill in self.skills:
 			skill.call_clientcommands(command_name, *args, **kwargs)
 
