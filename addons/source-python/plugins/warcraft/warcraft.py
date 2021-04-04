@@ -116,7 +116,7 @@ def _main_menu_say_command(command, index, team_only=None):
 @SayCommand("wcsadmin")
 def _admin_menu_say_command(command, index, team_only=None):
     player = player_dict[index]
-    if player.steamid == ADMINS:
+    if player.steamid in ADMINS:
         admin_menu.send(index)
         return CommandReturn.BLOCK
 
