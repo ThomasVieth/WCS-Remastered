@@ -6,6 +6,7 @@
 
 from warcraft.item import Item
 from warcraft.registration import events, clientcommands
+from warcraft.utility import classproperty
 
 ## __all__ declaration
 
@@ -15,13 +16,23 @@ __all__ = ("BootsOfSpeed", )
 
 class BootsOfSpeed(Item):
     category = "Enhancements"
+    cost = 3200
 
     @classmethod
     def is_available(cls, player):
-        return player.cash >= 3200
+        return player.cash >= cls.cost
+
+    @classproperty
+    def requirement_string(cls):
+        return "${}".format(cls.cost)
+
+    @classproperty
+    def requirement_sort_key(cls):
+        return cls.cost
 
     def on_purchase(self, player):
-        player.cash -= 3200
+        super().on_purchase(player)
+        player.cash -= self.cost
         player.speed += 0.2
 
     @events('player_spawn')
