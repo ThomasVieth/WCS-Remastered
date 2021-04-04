@@ -10,7 +10,7 @@ from warcraft.utility import classproperty, NamingHandler, SubclassFinder ## des
 
 ## logging definition
 
-skilllog_path = WARCRAFT_LOG_PATH / "skills.log"
+itemlog_path = WARCRAFT_LOG_PATH / "items.log"
 
 ## __all__ declaration
 
@@ -27,7 +27,7 @@ class Item(CallbackHandler, NamingHandler, SubclassFinder):
     # core attributes
     @classmethod
     def is_available(cls, player) -> bool:
-        """Returns whether or not a skill should be available to the user."""
+        """Returns whether or not a item should be available to the user."""
         return player.cash > 0
 
     @classproperty
