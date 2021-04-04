@@ -2,12 +2,6 @@
 
 """
 
-## python imports
-
-from collections import defaultdict
-from functools import partialmethod, wraps
-from re import compile as re_compile
-
 ## warcraft.package imports
 from warcraft.events import call_event
 from warcraft.logging import debug, error, WARCRAFT_LOG_PATH
@@ -23,7 +17,7 @@ skilllog_path = WARCRAFT_LOG_PATH / "skills.log"
 
 __all__ = ("Skill", )
 
-## race class declaration
+## skill class declaration
 
 class Skill(Levelable, CallbackHandler, NamingHandler, SubclassFinder):
 	""""""
