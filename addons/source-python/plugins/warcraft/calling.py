@@ -82,20 +82,21 @@ def _on_hurt_call_events(event_data):
     if event_data['userid'] == event_data['attacker'] or event_data['attacker'] == 0:
         return
 
+    kwargs = event_data.variables.as_dict()
     attacker = player_dict.from_userid(event_data['attacker'])
     victim = player_dict.from_userid(event_data['userid'])
 
     if victim.team == attacker.team:
         attacker.call_events('player_teammate_attack', player=attacker,
-            victim=victim, attacker=attacker)
+            victim=victim, attacker=attacker, **kwargs)
         victim.call_events('player_teammate_victim', player=victim,
-            attacker=attacker, victim=victim)
+            attacker=attacker, victim=victim, **kwargs)
         return
 
     attacker.call_events('player_attack', player=attacker, victim=victim,
-        attacker=attacker)
+        attacker=attacker, **kwargs)
     victim.call_events('player_victim', player=victim, attacker=attacker,
-        victim=victim)
+        victim=victim, **kwargs)
 
 @EntityPreHook(EntityCondition.is_player, 'on_take_damage')
 def _pre_damage_call_events(stack_data):
