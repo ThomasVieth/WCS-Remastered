@@ -32,7 +32,8 @@ class AppearenceDust(Item):
 
     @classmethod
     def is_available(cls, player):
-        return player.cash >= cls.cost and not player.dead
+        item_count = sum(isinstance(item, cls) for item in player.items)
+        return player.cash >= cls.cost and not player.dead and item_count < 1
 
     @classproperty
     def requirement_string(cls):
@@ -69,7 +70,8 @@ class RazorClaws(Item):
 
     @classmethod
     def is_available(cls, player):
-        return player.cash >= cls.cost and not player.dead
+        item_count = sum(isinstance(item, cls) for item in player.items)
+        return player.cash >= cls.cost and not player.dead and item_count < 1
 
     @classproperty
     def requirement_string(cls):
@@ -106,7 +108,8 @@ class BottledFlame(Item):
 
     @classmethod
     def is_available(cls, player):
-        return player.cash >= cls.cost and not player.dead
+        item_count = sum(isinstance(item, cls) for item in player.items)
+        return player.cash >= cls.cost and not player.dead and item_count < 1
 
     @classproperty
     def requirement_string(cls):
