@@ -35,7 +35,7 @@ def _on_shop_build(menu, index):
 def _on_shop_select(menu, index, choice):
     player = player_dict[index]
     category = choice.value
-    items = Item.iter_items_in_category(category)
+    items = Item.list_items_in_category(category)
     item_menu = PagedMenu(
         title=category,
         description=shop_menu_strings['description'],
@@ -45,7 +45,7 @@ def _on_shop_select(menu, index, choice):
     for item_cls in items:
         item_menu.append(
             PagedOption(
-                item_cls.name,
+                item_cls.name + " ({})".format(item_cls.requirement_string),
                 item_cls,
                 selectable=Item.is_available(player)
             )

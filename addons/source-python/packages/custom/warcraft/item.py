@@ -21,9 +21,12 @@ __all__ = ("Item", )
 class Item(CallbackHandler, NamingHandler, SubclassFinder):
     """"""
     __categories = set()
+    cost = 0
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, parent=None, *args, **kwargs):
         CallbackHandler.__init__(self, *args, **kwargs)
+
+        self.parent = parent
 
     # core attributes
     @classmethod
@@ -36,8 +39,12 @@ class Item(CallbackHandler, NamingHandler, SubclassFinder):
         return "N/A"
 
     @classproperty
-    def cost(cls):
-        return 0
+    def requirement_string(cls):
+        return "$" + str(cls.cost)
+
+    @classproperty
+    def requirement_sort_key(cls):
+        return cls.cost
     
     # core events
     def get_event_variables(self):
@@ -72,3 +79,8 @@ class Item(CallbackHandler, NamingHandler, SubclassFinder):
         for subcls in cls.iter_subclasses():
             if subcls.category == category:
                 yield subcls
+
+    @classmethod
+    def list_items_in_category(cls, category):
+        items = list(cls.iter_items_in_category(category))
+        return sorted(items, key=lambda x: x.requirement_sort_key)
