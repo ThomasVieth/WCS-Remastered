@@ -43,11 +43,13 @@ def _on_shop_select(menu, index, choice):
         parent_menu=menu,
     )
     for item_cls in items:
+        selectable = item_cls.is_available(player)
         item_menu.append(
             PagedOption(
                 item_cls.name + " ({})".format(item_cls.requirement_string),
                 item_cls,
-                selectable=Item.is_available(player)
+                selectable=selectable,
+                highlight=selectable
             )
         )
     return item_menu
@@ -60,8 +62,8 @@ def _on_items_select(menu, index, choice):
     item = item_cls(parent=player)
 
     ## Notify of purchase.
-    item.on_purchase(player)
     player.items.append(item)
+    item.on_purchase(player)
 
 ## menu declarations
 
