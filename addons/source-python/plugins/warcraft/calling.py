@@ -103,7 +103,7 @@ def _on_hurt_call_events(event_data):
 def _pre_damage_call_events(stack_data):
     take_damage_info = make_object(TakeDamageInfo, stack_data[1])
     if not take_damage_info.attacker:
-        return
+        return False
     entity = Entity(take_damage_info.attacker)
     attacker = player_dict[entity.index] if entity.is_player() else None
     victim = player_dict[index_from_pointer(stack_data[0])]
@@ -119,7 +119,7 @@ def _pre_damage_call_events(stack_data):
             attacker.call_events('player_pre_teammate_attack', player=attacker,
                 **event_args)
             victim.call_events('player_pre_teammate_victim', player=victim, **event_args)
-            return
+            return False
 
         attacker.call_events('player_pre_attack', player=attacker, **event_args)
         victim.call_events('player_pre_victim', player=victim, **event_args)
@@ -132,17 +132,13 @@ def _pre_run_command_call_events(stack_data):
     player = player_dict[index_from_pointer(stack_data[0])]
     usercmd = make_object(UserCmd, stack_data[1])
 
-    if player.dead and not player.call_events_when_dead:
-        return
-
-    player.call_events('player_pre_run_command', player=player, usercmd=usercmd)
+    if not player.dead or player.call_events_when_dead:
+        player.call_events('player_pre_run_command', player=player, usercmd=usercmd)
 
 @ClientCommandFilter
 def _filter_commands_call_events(command, index):
     player = player_dict[index]
     command_name = command[0]
 
-    if player.dead and not player.call_events_when_dead:
-        return
-
-    player.race.call_clientcommands(command_name, player=player, command=command)
+    if not player.dead or player.call_events_when_dead:
+        player.race.call_clientcommands(command_name, player=player, command=command)
