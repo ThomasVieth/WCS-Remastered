@@ -2,6 +2,10 @@
 
 """
 
+## source.python imports
+
+from listeners.tick import Delay
+
 ## warcraft.package imports
 
 from warcraft.commands.messages import send_wcs_saytext_by_index
@@ -206,5 +210,6 @@ class HeartOfThePhoenix(Item):
     @events('player_death')
     def _on_player_death(self, player, **kwargs):
         Delay(1, player.spawn)
+        Delay(1, send_wcs_saytext_by_index, args=(self._msg_instant, player.index))
         ## remove the item
         player.items.remove(self)
