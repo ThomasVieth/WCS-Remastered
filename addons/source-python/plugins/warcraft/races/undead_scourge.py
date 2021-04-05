@@ -45,7 +45,7 @@ class UndeadScourge(Race):
     def max_level(cls):
         return 32
 
-    @events
+    @events('player_spawn')
     def _on_player_spawn(self, player, **kwargs):
         location = player.origin
         location2 = location
