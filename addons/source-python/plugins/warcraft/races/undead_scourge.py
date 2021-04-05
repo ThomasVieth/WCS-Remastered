@@ -48,11 +48,11 @@ class UndeadScourge(Race):
     @events('player_spawn')
     def _on_player_spawn(self, player, **kwargs):
         location = player.origin
-        location2 = location
+        location2 = location.copy()
         location2.z += 20
-        location3 = location2
+        location3 = location2.copy()
         location3.z += 20
-        location4 = location3
+        location4 = location3.copy()
         location4.z += 20
         self.beam.create(center=location, start_radius=60, end_radius=80)
         self.beam.create(center=location2, start_radius=70, end_radius=90)
@@ -102,7 +102,8 @@ class VampiricAura(Skill):
 
         weapon = attacker.active_weapon
         if weapon and weapon.weapon_name.split("_")[-1] not in weapon_manager.projectiles:
-            start_location = weapon.origin
+            start_location = weapon.origin.copy()
+            start_location.z += 40
             end_location = attacker.get_view_coordinates()
 
             self.beam.create(start_point=start_location, end_point=end_location)

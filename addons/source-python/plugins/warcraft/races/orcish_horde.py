@@ -91,7 +91,8 @@ class BloodFury(Skill):
             
             weapon = attacker.active_weapon
             if weapon and weapon.weapon_name.split("_")[-1] not in weapon_manager.projectiles:
-                start_location = weapon.origin
+                start_location = weapon.origin.copy()
+                start_location.z += 40
                 end_location = attacker.get_view_coordinates()
 
                 self.beam.create(start_point=start_location, end_point=end_location)

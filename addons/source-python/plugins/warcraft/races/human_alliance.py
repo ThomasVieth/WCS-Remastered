@@ -157,8 +157,9 @@ class Teleport(Skill):
 
             ## These vectors should create a line diagonally through the player model,
             ## allowing us to see if the teleport is safe.
-            trace_vector1 = trace_vector2 = teleport_vector
-            trace_vector1.z += 60
+            trace_vector1 = teleport_vector.copy()
+            trace_vector2 = teleport_vector.copy()
+            trace_vector1.z += 80
             trace_vector1.x += 20
             trace_vector1.y -= 20
             trace_vector2.x -= 20
