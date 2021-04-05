@@ -12,6 +12,7 @@ from ..translations import (
     changerace_menu_strings,
     home_menu_strings,
     shop_menu_strings,
+    shopinfo_menu_strings,
     spendskills_menu_strings,
     raceinfo_menu_strings,
     playerinfo_menu_strings
@@ -36,9 +37,10 @@ main_menu = PagedMenu(
     select_callback=_on_main_menu_select,
     data=[
         PagedOption(shop_menu_strings['header'], 0),
-        PagedOption(spendskills_menu_strings['header'], 1),
-        PagedOption(changerace_menu_strings['header'], 2),
-        PagedOption(raceinfo_menu_strings['header'], 3),
-        PagedOption(playerinfo_menu_strings['header'], 4),
+        PagedOption(shopinfo_menu_strings['header'], 1),
+        PagedOption(spendskills_menu_strings['header'], 2),
+        PagedOption(changerace_menu_strings['header'], 3),
+        PagedOption(raceinfo_menu_strings['header'], 4),
+        PagedOption(playerinfo_menu_strings['header'], 5),
     ]
 )
