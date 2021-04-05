@@ -95,7 +95,7 @@ class BeltOfVitality(Item):
     def on_purchase(self, player):
         super().on_purchase(player)
         player.cash -= self.cost
-        self.repeater = Repeat(self.on_cycle)
+        self.repeater = Repeat(self.on_cycle, args=(player, ))
         self.repeater.start(1)
         send_wcs_saytext_by_index(self._msg_purchase, player.index)
 
