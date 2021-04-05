@@ -132,11 +132,17 @@ def _pre_run_command_call_events(stack_data):
     player = player_dict[index_from_pointer(stack_data[0])]
     usercmd = make_object(UserCmd, stack_data[1])
 
+    if player.dead and not player.call_events_when_dead:
+        return
+
     player.call_events('player_pre_run_command', player=player, usercmd=usercmd)
 
 @ClientCommandFilter
 def _filter_commands_call_events(command, index):
     player = player_dict[index]
     command_name = command[0]
+
+    if player.dead and not player.call_events_when_dead:
+        return
 
     player.race.call_clientcommands(command_name, player=player, command=command)

@@ -63,6 +63,7 @@ class Player(SPPlayer):
 		debug(playerslog_path, f"Setting up player <{self.name}> data.")
 
 		self.items = list()
+		self.call_events_when_dead = False
 
 	def create_user_data(self):
 		"""
