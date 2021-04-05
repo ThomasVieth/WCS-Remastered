@@ -14,11 +14,8 @@ from menus import (
 
 ## warcraft.package imports
 
-from .main import main_menu
 from ..players import player_dict
-from ..translations import (
-    admin_menu_strings,
-)
+from ..translations import admin_menu_strings
 
 ## __all__ declaration
 
@@ -53,15 +50,23 @@ def _on_admin_players_choose(menu, index, choice):
     return menu
 
 def _on_admin_menu_select(menu, index, choice):
-    return choice.value
+    return _admin_menu_options[choice.value]
 
 ## menu declarations
+
+admin_menu = PagedMenu(
+    title=admin_menu_strings['header'],
+    select_callback=_on_admin_menu_select,
+    data=[
+        PagedOption(admin_menu_strings['players'], 0)
+    ]
+)
 
 admin_player_menu = PagedMenu(
     title=admin_menu_strings['players'],
     build_callback=_on_admin_players_build,
     select_callback=_on_admin_players_select,
-    parent_menu=main_menu,
+    parent_menu=admin_menu,
 )
 
 player_menu = PagedMenu(
@@ -69,10 +74,6 @@ player_menu = PagedMenu(
     parent_menu=admin_player_menu
 )
 
-admin_menu = PagedMenu(
-    title=admin_menu_strings['header'],
-    select_callback=_on_admin_menu_select,
-    data=[
-        PagedOption(admin_menu_strings['players'], admin_player_menu)
-    ]
-)
+_admin_menu_options = [
+    admin_player_menu
+]

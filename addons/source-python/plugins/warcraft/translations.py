@@ -9,6 +9,7 @@ from translations.strings import LangStrings
 ## __all__ declaration
 
 __all__ = (
+    "admin_strings",
     "admin_menu_strings",
     "categories_strings",
 	"changerace_menu_strings",
@@ -22,6 +23,7 @@ __all__ = (
 
 ## translation loading
 
+admin_strings = LangStrings("warcraft/admin")
 experience_strings = LangStrings("warcraft/experience")
 
 admin_menu_strings = LangStrings("warcraft/menus/admin")

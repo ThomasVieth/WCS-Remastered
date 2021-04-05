@@ -40,6 +40,7 @@ from .effects import attach_entity_to_player
 from .experience import *
 from .menus import *
 from .players import player_dict
+from .translations import admin_strings
 
 ## constants
 
@@ -63,6 +64,8 @@ def _save_round_end(game_event):
     session.commit()
 
 ## handle say commands
+
+admin_failed_message = SayText2(message=admin_strings["failed"])
 
 @ClientCommand("showxp")
 @SayCommand("showxp")
@@ -118,7 +121,9 @@ def _admin_menu_say_command(command, index, team_only=None):
     player = player_dict[index]
     if player.steamid in ADMINS:
         admin_menu.send(index)
-        return CommandReturn.BLOCK
+    else:
+        admin_failed_message.send(index)
+    return CommandReturn.BLOCK
 
 ## handle level up
 
