@@ -85,6 +85,7 @@ def _on_hurt_call_events(event_data):
     kwargs = event_data.variables.as_dict()
     attacker = player_dict.from_userid(event_data['attacker'])
     victim = player_dict.from_userid(event_data['userid'])
+    del kwargs['attacker'] ## remove duplicate keyword argument
 
     if victim.team == attacker.team:
         attacker.call_events('player_teammate_attack', player=attacker,
