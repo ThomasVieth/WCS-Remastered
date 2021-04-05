@@ -4,7 +4,7 @@
 
 ## source.python imports
 
-from menus import PagedMenu, PagedOption
+from menus import PagedMenu, PagedOption, Text
 
 ## warcraft.package imports
 
@@ -33,6 +33,7 @@ def _on_spend_skills_build(menu, index):
                 selectable=selectable
             )
         )
+    menu.append(Text(' '))
     menu.append(
         PagedOption(
             spendskills_menu_strings['reset'].get_string(),
