@@ -110,12 +110,12 @@ class EarthgrabTotem(Skill):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.model = Model('sprites/blueflare1.vmt', True)
+        self.model._precache()
         self.effect = TempEntity('BeamRingPoint', start_radius=120,
             end_radius=0, model_index=self.model.index, halo_index=self.model.index,
             life_time=1.5, amplitude=10, red=10, green=255, blue=10, alpha=245, flags=0,
             start_width=6, end_width=6)
-        self.model = Model('sprites/blueflare1.vmt', True)
-        self.model._precache()
 
         if not root_sound.is_precached:
             root_sound.precache()
@@ -137,8 +137,8 @@ class EarthgrabTotem(Skill):
             victim.stuck = True
             victim.delay(1.5, victim.__setattr__, args=('stuck', False))
 
-            send_wcs_saytext_by_index(self._msg_a.format(victim.name), attacker.index)
-            send_wcs_saytext_by_index(self._msg_b.format(attacker.name), victim.index)
+            send_wcs_saytext_by_index(self._msg_a.format(name=victim.name), attacker.index)
+            send_wcs_saytext_by_index(self._msg_b.format(name=attacker.name), victim.index)
 
             root_sound.index = victim.index
             root_sound.origin = victim.origin
@@ -169,16 +169,19 @@ class Reincarnation(Skill):
         self.weapons = [Entity(index).class_name for index in victim.weapon_indexes(
                 not_filters='knife')
             ]
+        self.location = victim.origin.copy()
+        self.location.z += 1
 
     @events('player_death')
     def _on_death_respawn(self, player, **kwargs):
         if randint(1, 100) <= 25 + self.level:
-            player.delay(0.5, player.spawn)
+            player.delay(1.5, player.spawn)
             for index in player.weapon_indexes(not_filters='knife'):
                 entity = Entity(index)
                 player.delay(1.7, player.drop_weapon, args=(entity.pointer, None, None))
             for weapon in self.weapons:
                 player.delay(2.2, player.give_named_item, args=(weapon, ))
+            player.delay(2.3, player.teleport, args=(self.location, ))
 
             send_wcs_saytext_by_index(self._msg_a, player.index)
 
@@ -204,7 +207,7 @@ class ChainLightning(Skill):
         return 8
 
     _msg_a = '{GREEN}Chain Lightning {RED}hit enemies{PALE_GREEN}!'
-    _msg_c = '{GREEN}Chain Lightning {PALE_GREEN}is on cooldown for {DULL_RED}{time} {PALE_GREEN}seconds.'
+    _msg_c = '{{GREEN}}Chain Lightning {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time} {{PALE_GREEN}}seconds.'
     _msg_f = '{GREEN}Chain Lightning {PALE_GREEN}found {DULL_RED}no enemies{PALE_GREEN}!'
 
     def _find_closest_player(self, player, team, length=99999, exclusions=[]):
@@ -248,8 +251,8 @@ class ChainLightning(Skill):
                 if not target:
                     continue
                 target.take_damage(20+5*self.level, attacker_index=player.index)
-                location1 = last_target.origin
-                location2 = target.origin
+                location1 = last_target.origin.copy()
+                location2 = target.origin.copy()
                 location1.z += 40
                 location2.z += 40
                 self.beam.create(start_point=location1, end_point=location2, halo=self.laser, model=self.laser)
