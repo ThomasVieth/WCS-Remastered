@@ -86,9 +86,9 @@ class WeaponOfTheSorcerer(Skill):
         "weapon_deagle",
         "weapon_deagle",
         "weapon_deagle",
-        "weapon_m4a4",
-        "weapon_m4a4",
-        "weapon_m4a4"
+        "weapon_m4a1",
+        "weapon_m4a1",
+        "weapon_m4a1"
     )
 
     @classproperty
@@ -137,7 +137,6 @@ class LiftOff(Skill):
     def is_available(cls, player):
         return player.race.level > 8
 
-    _msg_a = '{BLUE}Lift Off!'
     _msg_c = '{{BLUE}}Lift Off {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
 
     @clientcommands('ultimate')
@@ -145,7 +144,6 @@ class LiftOff(Skill):
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             player.move_type = MoveType.WALK if player.move_type == MoveType.FLY else MoveType.FLY
-            send_wcs_saytext_by_index(self._msg_a, player.index)
             self.cooldowns['ultimate'] = (7 - self.level)
         else:
             send_wcs_saytext_by_index(self._msg_c.format(time=_cooldown), player.index)
