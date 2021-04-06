@@ -12,6 +12,7 @@ from sqlalchemy import and_
 
 from engines.server import engine_server
 from events import Event
+from listeners import OnClientDisconnect
 from players.dictionary import PlayerDictionary
 from players.entity import Player as SPPlayer
 
@@ -63,7 +64,10 @@ class Player(SPPlayer):
 		debug(playerslog_path, f"Setting up player <{self.name}> data.")
 
 		self.items = list()
+
 		self.call_events_when_dead = False
+
+		self.is_slowed = False
 
 	def create_user_data(self):
 		"""
@@ -197,9 +201,13 @@ class Player(SPPlayer):
 
 player_dict = PlayerDictionary(factory=Player)
 
-@Event("player_connect", "player_disconnect")
+@Event("player_connect")
 def _player_initialize(event_data):
 	userid = event_data["userid"]
 	player = player_dict.from_userid(userid)
-	if event_data.name == "player_disconnect":
-		player.update_race_data()
+
+@OnClientDisconnect
+def _player_cleanup(index):
+	player = player_dict[index]
+	player.call_events("player_death", player=player)
+	player.update_race_data()
