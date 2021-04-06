@@ -102,30 +102,28 @@ def _on_hurt_call_events(event_data):
 @EntityPreHook(EntityCondition.is_player, 'on_take_damage')
 def _pre_damage_call_events(stack_data):
     take_damage_info = make_object(TakeDamageInfo, stack_data[1])
-    if not take_damage_info.attacker:
-        return False
-    entity = Entity(take_damage_info.attacker)
-    attacker = player_dict[entity.index] if entity.is_player() else None
-    victim = player_dict[index_from_pointer(stack_data[0])]
+    if take_damage_info.attacker:
+        entity = Entity(take_damage_info.attacker)
+        attacker = player_dict[entity.index] if entity.is_player() else None
+        victim = player_dict[index_from_pointer(stack_data[0])]
 
-    event_args = {
-        'attacker': attacker,
-        'victim': victim,
-        'info': take_damage_info,
-    }
+        event_args = {
+            'attacker': attacker,
+            'victim': victim,
+            'info': take_damage_info,
+        }
 
-    if attacker:
-        if victim.team == attacker.team:
-            attacker.call_events('player_pre_teammate_attack', player=attacker,
-                **event_args)
-            victim.call_events('player_pre_teammate_victim', player=victim, **event_args)
-            return False
+        if attacker:
+            if victim.team == attacker.team:
+                attacker.call_events('player_pre_teammate_attack', player=attacker,
+                    **event_args)
+                victim.call_events('player_pre_teammate_victim', player=victim, **event_args)
+            else:
+                attacker.call_events('player_pre_attack', player=attacker, **event_args)
+                victim.call_events('player_pre_victim', player=victim, **event_args)
 
-        attacker.call_events('player_pre_attack', player=attacker, **event_args)
-        victim.call_events('player_pre_victim', player=victim, **event_args)
-
-        if victim.health <= take_damage_info.damage:
-            attacker.call_events('player_pre_death', player=victim, **event_args)
+                if victim.health <= take_damage_info.damage:
+                    attacker.call_events('player_pre_death', player=victim, **event_args)
 
 @EntityPreHook(EntityCondition.is_human_player, 'run_command')
 def _pre_run_command_call_events(stack_data):
