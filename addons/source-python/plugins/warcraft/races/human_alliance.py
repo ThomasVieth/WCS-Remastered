@@ -5,7 +5,6 @@
 ## python imports
 
 from random import randint
-from time import time
 
 ## source.python imports
 
@@ -16,7 +15,7 @@ from engines.trace import GameTrace
 from engines.trace import Ray
 from engines.trace import TraceFilterSimple
 from filters.players import PlayerIter
-from messages import Shake, SayText2
+from messages import Shake
 
 ## warcraft.package imports
 

@@ -5,14 +5,11 @@
 ## python imports
 
 from random import randint
-from time import time
 
 ## source.python imports
 
-from entities.entity import Entity
 from filters.weapons import WeaponClassIter
 from listeners.tick import Delay
-from messages import SayText2
 from players.constants import PlayerButtons
 
 ## warcraft.package imports

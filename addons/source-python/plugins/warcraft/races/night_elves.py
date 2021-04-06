@@ -5,18 +5,13 @@
 ## python imports
 
 from random import randint
-from time import time
 
 ## source.python imports
 
 from effects.base import TempEntity
 from engines.sound import StreamSound
 from engines.precache import Model
-from entities.entity import Entity
 from filters.players import PlayerIter
-from listeners.tick import Repeat
-from messages import SayText2
-from weapons.manager import weapon_manager
 
 ## warcraft.package imports
 
@@ -122,15 +117,18 @@ class TrueshotAura(Skill):
 
 @NightElves.add_skill
 class EntanglingRoots(Skill):
-    laser = Model('sprites/lgtning.vmt', True)
+    laser = Model('sprites/blueflare1.vmt', True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.cooldowns = CooldownDict()
         self.beam = TempEntity('BeamPoints', alpha=255, red=0, green=200, blue=0,
             life_time=1.0, start_width=15, end_width=15, frame_rate=255)
-        self.laser = Model('sprites/lgtning.vmt')
         self.laser._precache()
+        self.effect = TempEntity('BeamRingPoint', start_radius=120,
+            end_radius=0, model_index=self.laser.index, halo_index=self.laser.index,
+            life_time=1.5, amplitude=10, red=10, green=255, blue=10, alpha=245, flags=0,
+            start_width=6, end_width=6)
 
     @classproperty
     def description(cls):
@@ -187,6 +185,8 @@ class EntanglingRoots(Skill):
                 location2.z += 40
                 self.beam.create(start_point=location1, end_point=location2, halo=self.laser, model=self.laser)
                 last_target = target
+                self.effect.create(center=target.origin)
+                self.effect.create(center=target.origin, start_radius=80)
 
             root_sound.index = player.index
             root_sound.origin = player.origin

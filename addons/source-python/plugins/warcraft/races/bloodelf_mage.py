@@ -5,7 +5,6 @@
 ## python imports
 
 from random import randint
-from time import time
 
 ## source.python imports
 
@@ -20,12 +19,9 @@ from engines.trace import Ray
 from engines.trace import TraceFilterSimple
 from entities.constants import RenderMode
 from entities.entity import Entity
-from entities.helpers import index_from_pointer
 from filters.players import PlayerIter
-from filters.recipients import RecipientFilter
 from listeners.tick import Delay, Repeat
-from mathlib import QAngle, Vector
-from messages import SayText2
+from mathlib import QAngle
 from players.constants import PlayerButtons
 
 ## warcraft.package imports

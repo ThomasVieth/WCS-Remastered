@@ -5,12 +5,10 @@
 ## python imports
 
 from random import randint
-from time import time
 
 ## source.python imports
 
 from filters.weapons import WeaponClassIter
-from messages import SayText2
 
 ## warcraft.package imports
 

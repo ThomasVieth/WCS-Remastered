@@ -11,7 +11,6 @@ from random import randint
 from effects.base import TempEntity
 from engines.precache import Model
 from filters.players import PlayerIter
-from messages import SayText2
 from weapons.manager import weapon_manager
 
 ## warcraft.package imports

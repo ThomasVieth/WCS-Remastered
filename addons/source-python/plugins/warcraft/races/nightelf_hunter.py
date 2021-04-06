@@ -10,7 +10,7 @@ from time import time
 ## source.python imports
 
 from colors import Color
-from mathlib import QAngle, Vector
+from mathlib import QAngle
 from engines.sound import StreamSound
 from engines.trace import engine_trace
 from engines.trace import ContentMasks
@@ -19,10 +19,8 @@ from engines.trace import Ray
 from engines.trace import TraceFilterSimple
 from entities.constants import RenderMode
 from entities.entity import Entity
-from events import Event
 from filters.players import PlayerIter
 from listeners.tick import Delay
-from messages import SayText2
 from players.constants import PlayerButtons
 
 ## warcraft.package imports

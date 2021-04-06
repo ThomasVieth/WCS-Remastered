@@ -5,16 +5,14 @@
 ## python imports
 
 from random import randint
-from time import time
 
 ## source.python imports
 
 from effects.base import TempEntity
 from engines.precache import Model
-from engines.sound import StreamSound, Sound
+from engines.sound import StreamSound
 from entities.entity import Entity
 from listeners.tick import Delay
-from messages import SayText2
 
 ## warcraft.package imports
 
@@ -242,7 +240,7 @@ class DivineShield(Skill):
             attach_entity_to_player(player, effect)
             Delay(duration, self.kill_effect, args=(effect, ))
 
-            SayText2(self._msg_a.format(time=duration), player.index)
+            send_wcs_saytext_by_index(self._msg_a.format(time=duration), player.index)
 
             godmode_sound.index = player.index
             godmode_sound.origin = player.origin
@@ -250,4 +248,4 @@ class DivineShield(Skill):
 
             self.cooldowns['ultimate'] = 20
         else:
-            SayText2(self._msg_c.format(time=_cooldown), player.index)
+            send_wcs_saytext_by_index(self._msg_c.format(time=_cooldown), player.index)

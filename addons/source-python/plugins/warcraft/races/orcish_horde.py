@@ -5,7 +5,6 @@
 ## python imports
 
 from random import randint
-from time import time
 
 ## source.python imports
 
@@ -15,7 +14,6 @@ from engines.precache import Model
 from entities.entity import Entity
 from filters.players import PlayerIter
 from listeners.tick import Repeat
-from messages import SayText2
 from weapons.manager import weapon_manager
 
 ## warcraft.package imports
