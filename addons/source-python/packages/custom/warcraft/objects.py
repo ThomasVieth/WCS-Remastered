@@ -31,7 +31,7 @@ class Levelable:
 	@level.setter
 	def level(self, value):
 		if value < self.min_level or value > self.max_level:
-			raise ValueError(f"{self.name}.level.set value must be within minimum and maximum level range.")
+			self._level = self.min_level
 		self._level = value
 
 	@property
