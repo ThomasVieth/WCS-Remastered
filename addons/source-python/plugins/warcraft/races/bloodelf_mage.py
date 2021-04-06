@@ -45,7 +45,7 @@ class BloodElfArchmage(Race):
 
     @classproperty
     def description(cls):
-        return "Showing the pinnacle of arcane power."
+        return "Recoded Blood Mage. (Kryptonite)"
 
     @classproperty
     def max_level(cls):
