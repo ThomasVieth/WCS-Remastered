@@ -44,6 +44,10 @@ class HumanAlliance(Race):
     def max_level(cls):
         return 40
 
+    @classproperty
+    def requirement_sort_key(cls):
+        return 2
+
 @HumanAlliance.add_skill
 class Invisibility(Skill):
 

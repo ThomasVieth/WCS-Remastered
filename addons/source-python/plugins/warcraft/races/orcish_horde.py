@@ -45,6 +45,10 @@ class OrcishHorde(Race):
     def max_level(cls):
         return 40
 
+    @classproperty
+    def requirement_sort_key(cls):
+        return 3
+
 
 @OrcishHorde.add_skill
 class BloodFury(Skill):
