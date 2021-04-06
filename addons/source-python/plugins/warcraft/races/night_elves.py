@@ -87,13 +87,13 @@ class ThornsAura(Skill):
 
     _msg_a = '{{GREEN}}Thorns Aura {{PALE_GREEN}}reflected {{DULL_RED}}{damage} {{PALE_GREEN}}to {{RED}}{name}{{PALE_GREEN}}.'
 
-    @events('player_pre_victim')
-    def _on_player_pre_victim(self, attacker, victim, **kwargs):
+    @events('player_victim')
+    def _on_player_victim(self, attacker, victim, **kwargs):
         if attacker.dead or randint(0, 101) > (self.level * 2):
             return
 
         reflect_damage = 6 + self.level
-        attacker.take_damage(reflect_damage, attacker_index=victim.index)
+        attacker.take_damage(reflect_damage, attacker_index=victim.index, skip_hooks=True)
         send_wcs_saytext_by_index(self._msg_a.format(damage=reflect_damage, name=attacker.name), victim.index)
 
 
@@ -111,7 +111,7 @@ class TrueshotAura(Skill):
     _msg_a = '{{GREEN}}Trueshot Aura {{PALE_GREEN}}dealt {{DULL_RED}}{damage} {{PALE_GREEN}}extra to {{RED}}{name}{{PALE_GREEN}}.'
 
     @events('player_pre_attack')
-    def _on_player_pre_victim(self, attacker, victim, info, **kwargs):
+    def _on_player_pre_attack(self, attacker, victim, info, **kwargs):
         if victim.dead or randint(0, 101) > (self.level + 7):
             return
 
@@ -152,27 +152,14 @@ class EntanglingRoots(Skill):
     _msg_c = '{{GREEN}}Entangling Roots {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
     _msg_f = '{GREEN}Entangling Roots {PALE_GREEN}found {DULL_RED}no enemies{PALE_GREEN}!'
 
-    def _find_closest_player(self, player, team, length=99999, exclusions=[]):
-        _target = None
+    def _find_players_within(self, player, length=99999, exclusions=[]):
+        targets = []
+        team = 't' if player.team == 2 else 'ct'
         for target in PlayerIter(is_filters='alive', not_filters=team):
-            _distance = player.origin.get_distance(target.origin)
-            if _distance < length and not target in exclusions:
-                _target = target
-                length = _distance
-        return _target
-
-    def _find_chain_players(self, player, length, count):
-        _last_target = player
-        team = ['t', 'ct'][player.team-2]
-        _targets = []
-        while count > 0:
-            if not _last_target:
-                break
-            _target = self._find_closest_player(_last_target, team, length, _targets)
-            _targets.append(_target)
-            _last_target = _target
-            count -= 1
-        return _targets
+            distance = player.origin.get_distance(target.origin)
+            if distance < length:
+                targets.append(target)
+        return targets
 
     @events('player_spawn')
     def _on_player_spawn_reset(self, player, **kwargs):
@@ -183,9 +170,9 @@ class EntanglingRoots(Skill):
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             last_target = player
-            targets = self._find_chain_players(player, self.range, 3)
+            targets = self._find_players_within(player, self.range)
 
-            if targets[0] == None:
+            if len(targets) == 0:
                 send_wcs_saytext_by_index(self._msg_f, player.index)
                 return
 
@@ -201,9 +188,9 @@ class EntanglingRoots(Skill):
                 self.beam.create(start_point=location1, end_point=location2, halo=self.laser, model=self.laser)
                 last_target = target
 
-            chain_sound.index = player.index
-            chain_sound.origin = player.origin
-            chain_sound.play()
+            root_sound.index = player.index
+            root_sound.origin = player.origin
+            root_sound.play()
 
             send_wcs_saytext_by_index(self._msg_a, player.index)
             self.cooldowns['ultimate'] = 30
