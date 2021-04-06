@@ -20,6 +20,12 @@ player_victim
     attacker - The player that inflicted the damage.
     victim - The player that had taken the damage and caused the event.
     player - The player that had taken the damage and caused the event.
+    armor - The remaining amount of armor the victim has after the damage.
+    dmg_armor - The amount of damage sustained by the victim’s armor.
+    dmg_health - The amount of health the victim lost in the attack.
+    health - The remaining amount of health the victim has after the damage.
+    hitgroup - The hitgroup that was damaged in the attack.
+    weapon - The type of weapon used in the attack.
 
 player_attack
     attacker - The player that inflicted the damage and caused the event.
