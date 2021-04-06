@@ -43,15 +43,15 @@ class DemonHunter(Race):
 
     @classmethod
     def is_available(cls, player):
-        return player.total_level > 50
+        return player.total_level > 100
 
     @classproperty
     def requirement_string(cls):
-        return "Total Level 50"
+        return "Total Level 100"
 
     @classproperty
     def requirement_sort_key(cls):
-        return 50
+        return 101
 
 @DemonHunter.add_skill
 class DoubleJump(Skill):
