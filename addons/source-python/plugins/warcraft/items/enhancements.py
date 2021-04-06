@@ -85,12 +85,12 @@ class GryphonFeather(Item):
     def on_purchase(self, player):
         super().on_purchase(player)
         player.cash -= self.cost
-        player.gravity -= 0.35
+        player.gravity = max(player.gravity - 0.35, 0)
         send_wcs_saytext_by_index(self._msg_purchase, player.index)
 
     @events('player_spawn')
     def _on_player_spawn(self, player, **kwargs):
-        player.gravity -= 0.35
+        player.gravity = max(player.gravity - 0.35, 0)
 
     @events('player_death')
     def _on_player_death(self, player, **kwargs):
@@ -126,7 +126,7 @@ class LeaperPotion(Item):
 
     @events('player_jump')
     def _on_player_jump(self, player, **kwargs):
-        player.push(100, 100)
+        player.push(150, 150)
 
     @events('player_death')
     def _on_player_death(self, player, **kwargs):
@@ -159,14 +159,14 @@ class CloakOfShadows(Item):
         super().on_purchase(player)
         player.cash -= self.cost
         color = player.color
-        color.a = (255 * 0.7)
+        color.a = (255 * 0.3)
         player.color = color
         send_wcs_saytext_by_index(self._msg_purchase, player.index)
 
     @events('player_spawn')
     def _on_player_spawn(self, player, **kwargs):
         color = player.color
-        color.a = (255 * 0.7)
+        color.a = (255 * 0.3)
         player.color = color
 
     @events('player_death')
