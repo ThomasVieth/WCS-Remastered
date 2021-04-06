@@ -1,0 +1,211 @@
+"""
+
+"""
+
+## python imports
+
+from random import randint
+from time import time
+
+## source.python imports
+
+from effects.base import TempEntity
+from engines.sound import StreamSound
+from engines.precache import Model
+from entities.entity import Entity
+from filters.players import PlayerIter
+from listeners.tick import Repeat
+from messages import SayText2
+from weapons.manager import weapon_manager
+
+## warcraft.package imports
+
+from warcraft.commands.messages import send_wcs_saytext_by_index
+from warcraft.race import Race
+from warcraft.registration import events, clientcommands
+from warcraft.skill import Skill
+from warcraft.utility import classproperty, CooldownDict
+
+## __all__ declaration
+
+__all__ = ("NightElves", )
+
+## OrcishHorde declaration
+
+root_sound = StreamSound('source-python/warcraft/root.mp3', download=True)
+
+class NightElves(Race):
+    
+    @classproperty
+    def description(cls):
+        return 'Recoded Night Elves. (Kryptonite)'
+
+    @classproperty
+    def max_level(cls):
+        return 40
+
+    @classproperty
+    def requirement_sort_key(cls):
+        return 4
+
+@NightElves.add_skill
+class EvasionAura(Skill):
+
+    @classproperty
+    def description(cls):
+        return 'Gives the Night Elves a chance to avoid attacks 5-21%.'
+
+    @classproperty
+    def max_level(cls):
+        return 8
+
+    _msg_a = '{{GREEN}}Evasion Aura {{PALE_GREEN}}evaded {{DULL_RED}}{damage:0.0f} {{PALE_GREEN}}damage.'
+
+    @property
+    def _chance(self):
+        return 5 + (self.level * 2)
+
+    @events('player_pre_victim')
+    def _on_player_pre_victim(self, victim, info, **eargs):
+        if randint(1, 100) > self._chance:
+            return
+
+        send_wcs_saytext_by_index(self._msg_a.format(damage=info.damage), victim.index)
+        info.damage = 0
+
+
+@NightElves.add_skill
+class ThornsAura(Skill):
+
+    @classproperty
+    def description(cls):
+        return 'Gives the Night Elves a chance to reflect attacks 0-16% dealing 6-14 damage.'
+
+    @classproperty
+    def max_level(cls):
+        return 8
+
+    _msg_a = '{{GREEN}}Thorns Aura {{PALE_GREEN}}reflected {{DULL_RED}}{damage} {{PALE_GREEN}}to {{RED}}{name}{{PALE_GREEN}}.'
+
+    @events('player_pre_victim')
+    def _on_player_pre_victim(self, attacker, victim, **kwargs):
+        if attacker.dead or randint(0, 101) > (self.level * 2):
+            return
+
+        reflect_damage = 6 + self.level
+        attacker.take_damage(reflect_damage, attacker_index=victim.index)
+        send_wcs_saytext_by_index(self._msg_a.format(damage=reflect_damage, name=attacker.name), victim.index)
+
+
+@NightElves.add_skill
+class TrueshotAura(Skill):
+
+    @classproperty
+    def description(cls):
+        return 'Gives the Night Elves a chance to deal 5-21 extra damage, 7-15% chance.'
+
+    @classproperty
+    def max_level(cls):
+        return 8
+
+    _msg_a = '{{GREEN}}Trueshot Aura {{PALE_GREEN}}dealt {{DULL_RED}}{damage} {{PALE_GREEN}}extra to {{RED}}{name}{{PALE_GREEN}}.'
+
+    @events('player_pre_attack')
+    def _on_player_pre_victim(self, attacker, victim, info, **kwargs):
+        if victim.dead or randint(0, 101) > (self.level + 7):
+            return
+
+        extra_damage = (5 + (self.level * 2))
+        info.damage += extra_damage
+        send_wcs_saytext_by_index(self._msg_a.format(damage=extra_damage, name=victim.name), attacker.index)
+
+
+@NightElves.add_skill
+class EntanglingRoots(Skill):
+    laser = Model('sprites/lgtning.vmt', True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.cooldowns = CooldownDict()
+        self.beam = TempEntity('BeamPoints', alpha=255, red=0, green=200, blue=0,
+            life_time=1.0, start_width=15, end_width=15, frame_rate=255)
+        self.laser = Model('sprites/lgtning.vmt')
+        self.laser._precache()
+
+    @classproperty
+    def description(cls):
+        return 'Roots every enemy within 225-400 range making them unable to move for 2-3 seconds.'
+
+    @classproperty
+    def max_level(cls):
+        return 8
+
+    @property
+    def range(self):
+        return 225 + ((self.level - 1) * 25)
+    
+    @property
+    def duration(self):
+        return 2 + (self.level * 0.125)
+
+    _msg_a = '{GREEN}Entangling Roots rooted {RED}enemies{PALE_GREEN}!'
+    _msg_c = '{{GREEN}}Entangling Roots {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
+    _msg_f = '{GREEN}Entangling Roots {PALE_GREEN}found {DULL_RED}no enemies{PALE_GREEN}!'
+
+    def _find_closest_player(self, player, team, length=99999, exclusions=[]):
+        _target = None
+        for target in PlayerIter(is_filters='alive', not_filters=team):
+            _distance = player.origin.get_distance(target.origin)
+            if _distance < length and not target in exclusions:
+                _target = target
+                length = _distance
+        return _target
+
+    def _find_chain_players(self, player, length, count):
+        _last_target = player
+        team = ['t', 'ct'][player.team-2]
+        _targets = []
+        while count > 0:
+            if not _last_target:
+                break
+            _target = self._find_closest_player(_last_target, team, length, _targets)
+            _targets.append(_target)
+            _last_target = _target
+            count -= 1
+        return _targets
+
+    @events('player_spawn')
+    def _on_player_spawn_reset(self, player, **kwargs):
+        self.cooldowns['ultimate'] = 4
+
+    @clientcommands('ultimate')
+    def _on_player_ultimate(self, player, **kwargs):
+        _cooldown = self.cooldowns['ultimate']
+        if _cooldown <= 0:
+            last_target = player
+            targets = self._find_chain_players(player, self.range, 3)
+
+            if targets[0] == None:
+                send_wcs_saytext_by_index(self._msg_f, player.index)
+                return
+
+            for target in targets:
+                if not target:
+                    continue
+                target.stuck = True
+                target.delay(self.duration, target.__setattr__, args=('stuck', False))
+                location1 = last_target.origin.copy()
+                location2 = target.origin.copy()
+                location1.z += 40
+                location2.z += 40
+                self.beam.create(start_point=location1, end_point=location2, halo=self.laser, model=self.laser)
+                last_target = target
+
+            chain_sound.index = player.index
+            chain_sound.origin = player.origin
+            chain_sound.play()
+
+            send_wcs_saytext_by_index(self._msg_a, player.index)
+            self.cooldowns['ultimate'] = 30
+        else:
+            send_wcs_saytext_by_index(self._msg_c.format(time=_cooldown), player.index)
