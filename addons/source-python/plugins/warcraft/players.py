@@ -189,12 +189,14 @@ class Player(SPPlayer):
 
 	def call_events(self, event_name, *args, **kwargs):
 		self.race.call_events(event_name, *args, **kwargs)
-		for item in self.items:
+		items = self.items.copy()
+		for item in items:
 			item.call_events(event_name, *args, **kwargs)
 
 	def call_clientcommands(self, command_name, *args, **kwargs):
 		self.race.call_events(command_name, *args, **kwargs)
-		for item in self.items:
+		items = self.items.copy()
+		for item in items:
 			item.call_clientcommands(command_name, *args, **kwargs)
 
 ## core
