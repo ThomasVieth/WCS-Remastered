@@ -200,7 +200,7 @@ class SuicideBomber(Skill):
 
         for target in PlayerIter(is_filters=team):
             if player.origin.get_distance(target.origin) <= self._range:
-                target.take_damage(self._magnitude, attacker_index=player.index)
+                target.take_damage(self._magnitude, attacker_index=player.index, skip_hooks=True)
                 send_wcs_saytext_by_index(self._msg_a.format(name=target.name), player.index)
 
         explosion = TempEntity('Explosion',

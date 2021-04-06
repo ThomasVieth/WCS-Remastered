@@ -254,7 +254,7 @@ class ChainLightning(Skill):
             for target in targets:
                 if not target:
                     continue
-                target.take_damage(20+5*self.level, attacker_index=player.index)
+                target.take_damage(20+5*self.level, attacker_index=player.index, skip_hooks=True)
                 location1 = last_target.origin.copy()
                 location2 = target.origin.copy()
                 location1.z += 40

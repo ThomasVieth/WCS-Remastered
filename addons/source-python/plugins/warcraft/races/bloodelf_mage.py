@@ -276,7 +276,7 @@ class Blizzard(Skill):
         for player in player_dict.values():
             if player.origin.get_distance(self._center) < (self.range / 2) and player.team != self._player.team and not player.playerinfo.is_dead():
                 if player not in self._players_hit:
-                    player.take_damage(self.damage, attacker_index=self._player.index, weapon_index=self.weapon_index)
+                    player.take_damage(self.damage, attacker_index=self._player.index, weapon_index=self.weapon_index, skip_hooks=True)
                     speed = player.speed
                     player.speed *= self.slow
                     self._players_hit.add(player)
