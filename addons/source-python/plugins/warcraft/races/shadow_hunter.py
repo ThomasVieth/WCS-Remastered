@@ -49,6 +49,11 @@ class ShadowHunter(Race):
 @ShadowHunter.add_skill
 class HealingWave(Skill):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.repeater = Repeat(self.on_cycle, args=(self.parent.parent, ))
+
     @classproperty
     def description(cls):
         return 'Heals yourself and teammates within 250 range for up to 175 health.'
@@ -84,7 +89,6 @@ class HealingWave(Skill):
 
     @events('player_spawn')
     def _on_player_spawn(self, player, **kwargs):
-        self.repeater = Repeat(self.on_cycle, args=(player, ))
         self.repeater.start(self.duration)
         send_wcs_saytext_by_index(self._msg_a.format(health=self.health, duration=self.duration), player.index)
 
@@ -134,7 +138,7 @@ class SerpentWard(Skill):
         self.cooldowns = CooldownDict()
         self._player = self.parent.parent
         self._players_hit = set()
-        self._repeater = None
+        self._repeater = Repeat(self._repeat, args=(self._player, ))
         self._wards = list()
 
         self.outer_ring = TempEntity('BeamRingPoint',
@@ -181,10 +185,10 @@ class SerpentWard(Skill):
     def _draw_ward(self, origin):
         start_point = origin.copy()
         start_point.z += 2
-        self.outer_ring.create(center=start_point, start_radius=self.range, end_radius=self.range+1, life_time=0.2)
+        self.outer_ring.create(center=start_point, start_radius=self.range, end_radius=self.range+1, life_time=1)
         end_point = origin.copy()
         end_point.z += 150
-        self.beam.create(start_point=start_point, end_point=end_point, life_time=0.2)
+        self.beam.create(start_point=start_point, end_point=end_point, life_time=1)
 
     def _delete_ward(self, origin):
         try:
@@ -200,8 +204,11 @@ class SerpentWard(Skill):
             for target in player_dict.values():
                 if target.origin.get_distance(ward_origin) < (self.range / 2) and target.team != player.team and not target.dead:
                     if target not in self._players_hit:
+                        self._players_hit.add(target)
+                        target_point = target.origin.copy()
+                        target_point.z += 40
                         target.take_damage(self.damage, attacker_index=player.index, weapon_index=self.weapon_index, skip_hooks=True)
-                        self.beam.create(start_point=end_point, end_point=target.origin, life_time=0.2, start_width=5, end_width=1)
+                        self.beam.create(start_point=end_point, end_point=target_point, life_time=0.2, start_width=5, end_width=1)
                         Delay(1, self._players_hit.discard, args=(target, ))
 
     @clientcommands('ability')
@@ -213,8 +220,7 @@ class SerpentWard(Skill):
         location = player.origin.copy()
         self._wards.append(location)
         self._players_hit.clear()
-        self._repeater = Repeat(self._repeat, args=(player, ))
-        self._repeater.start(0.1)
+        self._repeater.start(0.2)
 
         send_wcs_saytext_by_index(self._msg_a, player.index)
 
