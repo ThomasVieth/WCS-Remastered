@@ -57,14 +57,6 @@ class Item(CallbackHandler, NamingHandler, SubclassFinder):
         """"""
         call_event("item_purchased", [], self.get_event_variables())
 
-    # core functionality
-    def call_events(self, event_name, *args, **kwargs):
-        for callback in self._events[event_name]:
-            callback(*args, **kwargs)
-
-    def call_clientcommands(self, command_name, *args, **kwargs):
-        for callback in self._clientcommands[command_name]:
-            callback(*args, **kwargs)
 
     @classproperty
     def categories(cls):
