@@ -259,7 +259,7 @@ class Blizzard(Skill):
         else:
             return None
 
-    @events('round_end')
+    @events('player_death', 'round_end')
     def _on_round_end(self, player, **kwargs):
         if self._repeater:
             self._repeater.stop()
