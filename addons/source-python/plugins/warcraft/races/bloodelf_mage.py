@@ -44,7 +44,6 @@ __all__ = ("BloodElfArchmage", )
 ## bloodelfarchmage declaration
 
 ice_sound = StreamSound('source-python/wcgo/icehit.mp3', download=True)
-teleport_sound = StreamSound('source-python/warcraft/timeleap.mp3', download=True)
 
 class BloodElfArchmage(Race):
 
@@ -56,17 +55,9 @@ class BloodElfArchmage(Race):
     def max_level(cls):
         return 40
 
-    @classmethod
-    def is_available(cls, player):
-        return player.total_level > 50
-
-    @classproperty
-    def requirement_string(cls):
-        return "Total Level 50"
-
     @classproperty
     def requirement_sort_key(cls):
-        return 50
+        return 5
 
 @BloodElfArchmage.add_skill
 class Phoenix(Skill):
@@ -81,8 +72,12 @@ class Phoenix(Skill):
         return 'Respawn the first teammate that dies.'
 
     @classproperty
+    def min_level(cls):
+        return 0
+
+    @classproperty
     def max_level(cls):
-        return 8
+        return 1
 
     _msg_a = '{DULL_RED}Your teammate, Blood Elf Archmage, forced you to respawn.'
 
@@ -94,7 +89,7 @@ class Phoenix(Skill):
     def _on_any_death(self, player, **kwargs):
         if self._should_respawn:
             send_wcs_saytext_by_index(self._msg_a, player.index)
-            player.spawn()
+            Delay(1, player.spawn)
         self._should_respawn = False
 
 @BloodElfArchmage.add_skill
@@ -106,7 +101,7 @@ class ArcaneBrilliance(Skill):
 
     @classproperty
     def max_level(cls):
-        return 8
+        return 6
 
     _msg_a = '{BLUE}You have boosted your teams economy.'
     _msg_b = '{{GREEN}}{name} {{PALE_GREEN}}increased your {{BLUE}}$ {{PALE_GREEN}}by {{GREEN}}{percent:0.0f}%'
@@ -143,11 +138,11 @@ class IceBarrier(Skill):
 
     @classproperty
     def max_level(cls):
-        return 8
+        return 6
 
     _msg_a = '{BLUE}Activated Ice Barrier shield.'
     _msg_b = '{DULL_RED}Your Ice Barrier has been broken.'
-    _msg_c = '{{BLUE}}Ice Barrier {{LIGHT_GREEN}}is on cooldown for {{DULL_RED}}{time} seconds.'
+    _msg_c = '{{BLUE}}Ice Barrier {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time} seconds.'
 
     _absorb = 0
 
@@ -354,35 +349,33 @@ class Blizzard(Skill):
 
 
 @BloodElfArchmage.add_skill
-class Blink(Skill):
+class CuringRitual(Skill):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.cooldowns = CooldownDict()
 
-        if not teleport_sound.is_precached:
-            teleport_sound.precache()
-
     @classproperty
     def description(cls):
-        return 'Teleport a short distance infront of yourself. Ultimate.'
+        return 'Sacrifice $100 to heal yourself. Ultimate.'
 
     @classproperty
     def max_level(cls):
-        return 8
+        return 6
 
     @property
     def time(self):
-        return 6 - (0.5 * self.level)
+        return 15 - (0.5 * self.level)
 
-    def _get_trace(self, start, end, mask, player, trace):
-        engine_trace.trace_ray(Ray(start, end),
-            ContentMasks.ALL, TraceFilterSimple((player, )), trace)
-        return trace
+    @property
+    def health(self):
+        return 15 + (self.level * 2)
 
-    _msg_b = '{{DULL_RED}}Cannot {{BLUE}}blink {{DULL_RED}}due to obstruction.'
-    _msg_c = '{{BLUE}}Blink {{PALE_GREEN}}is on {{DULL_RED}}cooldown {{PALE_GREEN}}for {} seconds.'
+    _msg_b = '{{DULL_RED}}Curing Ritual {{GREEN}}healed {{PALE_GREEN}}you for {{GREEN}}{health}HP{{PALE_GREEN}}.'
+    _msg_c = '{{DULL_RED}}Curing Ritual {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time} {{PALE_GREEN}}seconds.'
+    _msg_f1 = '{DULL_RED}Curing Ritual {RED}failed {PALE_GREEN}due to you cannot gain more {GREEN}HP{PALE_GREEN}.'
+    _msg_f2 = '{DULL_RED}Curing Ritual {RED}failed {PALE_GREEN}due to a lack of {GREEN}${PALE_GREEN}.'
 
     @events('player_spawn')
     def _on_player_spawn_reset(self, player, **eargs):
@@ -392,56 +385,15 @@ class Blink(Skill):
     def _on_player_ultimate(self, player, **eargs):
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
-            distance = 300 + 50 * self.level
-            view_vector = player.view_vector
-            origin = player.origin
-            teleport_vector = origin + (view_vector * distance)
-
-            ## These vectors should create a line diagonally through the player model,
-            ## allowing us to see if the teleport is safe.
-            trace_vector1 = trace_vector2 = teleport_vector
-            trace_vector1.z += 60
-            trace_vector1.x += 20
-            trace_vector1.y -= 20
-            trace_vector2.x -= 20
-            trace_vector2.y += 20
-            origin.z += 60
-
-            view = self._get_trace(
-                        origin, teleport_vector, ContentMasks.ALL, player,
-                        GameTrace()
-                        )
-
-            trace = self._get_trace(
-                        trace_vector1, trace_vector2, ContentMasks.ALL, player,
-                        GameTrace()
-                        )
-
-            if trace.did_hit() or view.did_hit():
-                send_wcs_saytext_by_index(self._msg_b, player.index)
+            if player.cash >= 100:
+                if player.health < 200:
+                    player.health += self.health
+                    player.cash -= 100
+                    send_wcs_saytext_by_index(self._msg_b.format(health=self.health), player.index)
+                    self.cooldowns['ultimate'] = self.time
+                else:
+                    send_wcs_saytext_by_index(self._msg_f1, player.index)
             else:
-                player.teleport(teleport_vector, None, None)
-                teleport_sound.play(player.index)
-
-                pointer = player.give_named_item('point_tesla', 0, None, False)
-                effect = Entity(index_from_pointer(pointer))
-                effect.add_output('m_Color 203 203 245')
-                effect.add_output('m_flRadius 240')
-                effect.add_output('beamcount_min 2400')
-                effect.add_output('beamcount_max 2750')
-                effect.add_output('thick_min 6')
-                effect.add_output('thick_max 1')
-                effect.add_output('lifetime_min .1')
-                effect.add_output('lifetime_max .3')
-                effect.add_output('interval_min .1')
-                effect.add_output('interval_min .3')
-                effect.add_output('texture sprites/blueflare1.vmt')
-                effect.origin = player.origin
-                effect.origin.z += 28
-                effect.set_parent(player.pointer, -1)
-                effect.delay(0.1, effect.call_input, args=('DoSpark', ))
-                effect.delay(0.3, effect.call_input, args=('DoSpark', ))
-                effect.delay(0.5, effect.call_input, args=('Kill', ))
-                self.cooldowns['ultimate'] = self.time
+                send_wcs_saytext_by_index(self._msg_f2, player.index)
         else:
-            send_wcs_saytext_by_index(self._msg_c.format(int(_cooldown)), player.index)
+            send_wcs_saytext_by_index(self._msg_c.format(time=int(_cooldown)), player.index)
