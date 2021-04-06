@@ -211,7 +211,7 @@ class DivineShield(Skill):
         effect.call_input('Kill')
 
     _msg_a = '{{ORANGE}}Divine Shield {{PALE_GREEN}}is active for {{ORANGE}}{time} {{PALE_GREEN}}seconds!'
-    _msg_c = '{{ORANGE}}Divine Shield {{PALE_GREEN}}is on {{DULL_RED}}cooldown {{PALE_GREEN}}for {time} seconds.'
+    _msg_c = '{{ORANGE}}Divine Shield {{PALE_GREEN}}is on {{DULL_RED}}cooldown {{PALE_GREEN}}for {time:0.1f} seconds.'
 
     @events('player_spawn', 'player_upgrade_skill')
     def _on_player_spawn_reset(self, player, **eargs):
@@ -250,4 +250,4 @@ class DivineShield(Skill):
 
             self.cooldowns['ultimate'] = 20
         else:
-            SayText2(self._msg_c.format(time=int(_cooldown)), player.index)
+            SayText2(self._msg_c.format(time=_cooldown), player.index)

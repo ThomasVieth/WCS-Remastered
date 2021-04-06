@@ -316,7 +316,7 @@ class WispSpirit(Skill):
     def max_level(cls):
         return 8
 
-    _msg_c = '{{BLUE}}Wisp Walk {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time} {{PALE_GREEN}}seconds.'
+    _msg_c = '{{BLUE}}Wisp Walk {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
     _msg_f = '{PALE_GREEN}You {DULL_RED}must {PALE_GREEN}be {GREEN}closer {PALE_GREEN}to a {GREEN}wall.'
     _msg_f2 = '{PALE_GREEN}You {DULL_RED}cannot {BLUE}teleport {PALE_GREEN}through this {GREEN}wall.'
     _msg_f3 = '{DULL_RED}Cannot {BLUE}teleport {DULL_RED}due to obstruction.'
@@ -390,4 +390,4 @@ class WispSpirit(Skill):
             teleport_sound.play(player.index)
             self.cooldowns['ultimate'] = 10
         else:
-            send_wcs_saytext_by_index(self._msg_c.format(time=int(_cooldown)), player.index)
+            send_wcs_saytext_by_index(self._msg_c.format(time=_cooldown), player.index)

@@ -373,7 +373,7 @@ class CuringRitual(Skill):
         return 15 + (self.level * 2)
 
     _msg_b = '{{DULL_RED}}Curing Ritual {{GREEN}}healed {{PALE_GREEN}}you for {{GREEN}}{health}HP{{PALE_GREEN}}.'
-    _msg_c = '{{DULL_RED}}Curing Ritual {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time} {{PALE_GREEN}}seconds.'
+    _msg_c = '{{DULL_RED}}Curing Ritual {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
     _msg_f1 = '{DULL_RED}Curing Ritual {RED}failed {PALE_GREEN}due to you cannot gain more {GREEN}HP{PALE_GREEN}.'
     _msg_f2 = '{DULL_RED}Curing Ritual {RED}failed {PALE_GREEN}due to a lack of {GREEN}${PALE_GREEN}.'
 
@@ -396,4 +396,4 @@ class CuringRitual(Skill):
             else:
                 send_wcs_saytext_by_index(self._msg_f2, player.index)
         else:
-            send_wcs_saytext_by_index(self._msg_c.format(time=int(_cooldown)), player.index)
+            send_wcs_saytext_by_index(self._msg_c.format(time=_cooldown), player.index)

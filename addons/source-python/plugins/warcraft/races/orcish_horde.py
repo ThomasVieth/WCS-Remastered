@@ -211,7 +211,7 @@ class ChainLightning(Skill):
         return 8
 
     _msg_a = '{GREEN}Chain Lightning {RED}hit enemies{PALE_GREEN}!'
-    _msg_c = '{{GREEN}}Chain Lightning {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time} {{PALE_GREEN}}seconds.'
+    _msg_c = '{{GREEN}}Chain Lightning {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
     _msg_f = '{GREEN}Chain Lightning {PALE_GREEN}found {DULL_RED}no enemies{PALE_GREEN}!'
 
     def _find_closest_player(self, player, team, length=99999, exclusions=[]):
@@ -269,4 +269,4 @@ class ChainLightning(Skill):
             send_wcs_saytext_by_index(self._msg_a, player.index)
             self.cooldowns['ultimate'] = 20
         else:
-            send_wcs_saytext_by_index(self._msg_c.format(time=int(_cooldown)), player.index)
+            send_wcs_saytext_by_index(self._msg_c.format(time=_cooldown), player.index)

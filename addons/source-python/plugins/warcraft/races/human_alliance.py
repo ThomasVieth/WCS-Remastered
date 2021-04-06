@@ -138,7 +138,7 @@ class Teleport(Skill):
     def max_level(cls):
         return 8
 
-    _msg_c = '{{BLUE}}Teleport {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time} {{PALE_GREEN}}seconds.'
+    _msg_c = '{{BLUE}}Teleport {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
     _msg_f = '{GREEN}Cannot {BLUE}teleport {DULL_RED}due to obstruction.'
 
     @events('player_spawn')
@@ -187,4 +187,4 @@ class Teleport(Skill):
                 teleport_sound.play(player.index)
                 self.cooldowns['ultimate'] = 8 - (0.5 * self.level)
         else:
-            send_wcs_saytext_by_index(self._msg_c.format(time=int(_cooldown)), player.index)
+            send_wcs_saytext_by_index(self._msg_c.format(time=_cooldown), player.index)

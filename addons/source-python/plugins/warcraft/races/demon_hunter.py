@@ -160,7 +160,7 @@ class DemonicTransformation(Skill):
     def is_available(cls, player):
         return player.race.level > 8
 
-    _msg_c = '{{RED}}Demonic Tranformation {{PALE_GREEN}}is on cooldown {{PALE_GREEN}}for {{DULL_RED}}{time} {{PALE_GREEN}}seconds.'
+    _msg_c = '{{RED}}Demonic Tranformation {{PALE_GREEN}}is on cooldown {{PALE_GREEN}}for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
 
     @events('player_spawn')
     def _on_player_spawn_reset(self, player, **eargs):
@@ -202,7 +202,4 @@ class DemonicTransformation(Skill):
                 self._status = True
             self.cooldowns['ultimate'] = 10
         else:
-            send_wcs_saytext_by_index(
-                self._msg_c.format(
-                    time=int(_cooldown)),
-                player.index)
+            send_wcs_saytext_by_index(self._msg_c.format(time=_cooldown), player.index)
