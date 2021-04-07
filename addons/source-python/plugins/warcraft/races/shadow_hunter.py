@@ -143,8 +143,8 @@ class SerpentWard(Skill):
 
         self.outer_ring = TempEntity('BeamRingPoint',
             model_index=self._model.index, halo_index=self._model.index,
-            amplitude=10, red=250, green=200, blue=100, alpha=245, flags=0,
-            start_width=10, end_width=10)
+            amplitude=10, red=250, green=200, blue=100, alpha=245, fade_length=100,
+            start_width=10, end_width=10, speed=3)
         self.beam = TempEntity('BeamPoints', alpha=255, red=0, green=0, blue=255,
             model_index=self._model2.index, start_width=7, end_width=7,
             frame_rate=255, halo_index=self._model2.index)
@@ -184,8 +184,8 @@ class SerpentWard(Skill):
 
     def _draw_ward(self, origin):
         start_point = origin.copy()
-        start_point.z += 2
-        self.outer_ring.create(center=start_point, start_radius=self.range, end_radius=self.range+1, life_time=1)
+        start_point.z += 4
+        self.outer_ring.create(center=start_point, start_radius=self.range, end_radius=self.range + 10, life_time=1)
         end_point = origin.copy()
         end_point.z += 150
         self.beam.create(start_point=start_point, end_point=end_point, life_time=1)
@@ -207,7 +207,7 @@ class SerpentWard(Skill):
                         self._players_hit.add(target)
                         target_point = target.origin.copy()
                         target_point.z += 40
-                        target.take_damage(self.damage, attacker_index=player.index, weapon_index=self.weapon_index, skip_hooks=True)
+                        target.take_damage(self.damage, attacker_index=player.index, weapon_index=self.weapon_index)
                         self.beam.create(start_point=end_point, end_point=target_point, life_time=0.2, start_width=5, end_width=1)
                         Delay(1, self._players_hit.discard, args=(target, ))
 

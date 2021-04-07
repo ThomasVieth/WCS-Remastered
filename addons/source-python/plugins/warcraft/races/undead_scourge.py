@@ -42,7 +42,7 @@ class UndeadScourge(Race):
 
     @classproperty
     def max_level(cls):
-        return 32
+        return 99
 
     @classproperty
     def requirement_sort_key(cls):

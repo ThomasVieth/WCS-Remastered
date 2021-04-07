@@ -49,7 +49,7 @@ class BloodElfArchmage(Race):
 
     @classproperty
     def max_level(cls):
-        return 40
+        return 99
 
     @classproperty
     def requirement_sort_key(cls):

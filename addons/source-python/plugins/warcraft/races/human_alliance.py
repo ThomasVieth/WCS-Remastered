@@ -41,7 +41,7 @@ class HumanAlliance(Race):
 
     @classproperty
     def max_level(cls):
-        return 40
+        return 99
 
     @classproperty
     def requirement_sort_key(cls):
@@ -103,7 +103,7 @@ class FrostBomb(Skill):
 
     @classproperty
     def description(cls):
-        return 'Upon damaging an enemy, shake them.'
+        return 'Upon damaging an enemy, shake them, 20-28% chance.'
 
     @classproperty
     def max_level(cls):

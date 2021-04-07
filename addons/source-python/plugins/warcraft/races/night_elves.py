@@ -37,7 +37,7 @@ class NightElves(Race):
 
     @classproperty
     def max_level(cls):
-        return 40
+        return 99
 
     @classproperty
     def requirement_sort_key(cls):
@@ -80,6 +80,10 @@ class ThornsAura(Skill):
     def max_level(cls):
         return 8
 
+    @property
+    def reflect_damage(self):
+        return 6 + self.level
+
     _msg_a = '{{GREEN}}Thorns Aura {{PALE_GREEN}}reflected {{DULL_RED}}{damage} {{PALE_GREEN}}to {{RED}}{name}{{PALE_GREEN}}.'
 
     @events('player_victim')
@@ -87,8 +91,10 @@ class ThornsAura(Skill):
         if attacker.dead or randint(0, 101) > (self.level * 2):
             return
 
-        reflect_damage = 6 + self.level
-        attacker.take_damage(reflect_damage, attacker_index=victim.index, skip_hooks=True)
+        info = TakeDamageInfo()
+        info.inflictor = victim.index
+        info.damage = self.reflect_damage
+        attacker.on_take_damage.call_trampoline(info)
         send_wcs_saytext_by_index(self._msg_a.format(damage=reflect_damage, name=attacker.name), victim.index)
 
 

@@ -41,7 +41,7 @@ class OrcishHorde(Race):
 
     @classproperty
     def max_level(cls):
-        return 40
+        return 99
 
     @classproperty
     def requirement_sort_key(cls):
@@ -124,7 +124,7 @@ class EarthgrabTotem(Skill):
 
     @classproperty
     def description(cls):
-        return 'Root your enemies to the ground.'
+        return 'Root your enemies to the ground, 16-24% chance.'
 
     @classproperty
     def max_level(cls):
@@ -158,7 +158,7 @@ class Reincarnation(Skill):
 
     @classproperty
     def description(cls):
-        return 'Upon death, the shamans will ressurect you in your old location.'
+        return 'Upon death, the shamans will ressurect you in your old location, 25-33% chance.'
 
     @classproperty
     def max_level(cls):
@@ -176,7 +176,7 @@ class Reincarnation(Skill):
 
     @events('player_death')
     def _on_death_respawn(self, player, **kwargs):
-        if randint(1, 100) <= 25 + self.level:
+        if randint(1, 101) <= 25 + self.level:
             player.delay(1.5, player.spawn)
             for index in player.weapon_indexes(not_filters='knife'):
                 entity = Entity(index)

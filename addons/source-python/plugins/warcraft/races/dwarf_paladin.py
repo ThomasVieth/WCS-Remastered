@@ -41,7 +41,7 @@ class DwarfPaladin(Race):
 
     @classproperty
     def max_level(cls):
-        return 40
+        return 99
 
     @classmethod
     def is_available(cls, player):
@@ -110,7 +110,7 @@ class HammerOfJustice(Skill):
     @events('player_pre_attack')
     def _on_player_pre_attack(self, attacker, victim, **kwargs):
         if randint(1, 100) < 10 + self.level and not victim.stuck:
-            victim.push(1, 200, True)
+            victim.push(1, 200, False)
             victim.delay(0.8, victim.__setattr__, args=('stuck', True))
             victim.delay(1.8, victim.__setattr__, args=('stuck', False))
 

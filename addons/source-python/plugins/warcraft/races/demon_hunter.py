@@ -36,7 +36,7 @@ class DemonHunter(Race):
 
     @classproperty
     def max_level(cls):
-        return 40
+        return 99
 
     @classmethod
     def is_available(cls, player):
@@ -77,8 +77,8 @@ class DoubleJump(Skill):
     def _on_player_run_command(self, player, usercmd, **kwargs):
         if usercmd.buttons & PlayerButtons.JUMP and not player.buttons & PlayerButtons.JUMP and not self.has_jumped:
             if player.ground_entity == -1:
-                player.push(1, 300, True)
                 self.has_jumped = True
+                player.push(1, 300, True)
                 Delay(self._delay, setattr, args=(self, 'has_jumped', False))
 
 

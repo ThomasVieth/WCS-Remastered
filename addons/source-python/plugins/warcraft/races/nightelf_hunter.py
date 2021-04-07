@@ -49,7 +49,7 @@ class NightElfHunter(Race):
 
     @classproperty
     def max_level(cls):
-        return 40
+        return 99
 
     @classmethod
     def is_available(cls, player):
