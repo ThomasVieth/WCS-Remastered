@@ -41,7 +41,7 @@ class CryptLord(Race):
         return 8
 
 
-@Warden.add_skill
+@CryptLord.add_skill
 class Impale(Skill):
 
     @classproperty
@@ -62,7 +62,7 @@ class Impale(Skill):
             send_wcs_saytext_by_index(self._msg_a.format(name=victim.name), attacker.index)
 
 
-@Warden.add_skill
+@CryptLord.add_skill
 class SpikedCarapace(Skill):
 
     def __init__(self, *args, **kwargs):
@@ -112,7 +112,7 @@ class SpikedCarapace(Skill):
         attacker.on_take_damage.call_trampoline(info)
 
 
-@Warden.add_skill
+@CryptLord.add_skill
 class ShadowStrike(Skill):
 
     @classproperty
@@ -140,7 +140,7 @@ class ShadowStrike(Skill):
             send_wcs_saytext_by_index(self._msg_a.format(damage=self.extra_damage, name=victim.name), attacker.index)
 
 
-@Warden.add_skill
+@CryptLord.add_skill
 class LocustSwarm(Skill):
 
     def __init__(self, *args, **kwargs):
