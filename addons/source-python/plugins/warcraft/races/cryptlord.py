@@ -22,15 +22,15 @@ from warcraft.utility import classproperty, CooldownDict
 
 ## __all__ declaration
 
-__all__ = ("Warden", )
+__all__ = ("CryptLord", )
 
-## warden declaration
+## cryptlord declaration
 
-class Warden(Race):
+class CryptLord(Race):
 
     @classproperty
     def description(cls):
-        return 'Recoded Warden. (Kryptonite)'
+        return 'Recoded Crypt Lord. (Kryptonite)'
 
     @classproperty
     def max_level(cls):
