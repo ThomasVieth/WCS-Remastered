@@ -5,6 +5,7 @@
 ## source.python imports
 
 from listeners.tick import Delay
+from mathlib import Vector
 
 ## warcraft.package imports
 
@@ -126,7 +127,12 @@ class LeaperPotion(Item):
 
     @events('player_jump')
     def _on_player_jump(self, player, **kwargs):
-        player.push(150, 150)
+        velocity = Vector()
+        player.get_velocity(velocity, None)
+        velocity.x *= 2
+        velocity.y *= 2
+        velocity.z = 10
+        player.base_velocity = velocity
 
     @events('player_death')
     def _on_player_death(self, player, **kwargs):
