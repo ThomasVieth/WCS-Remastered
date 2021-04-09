@@ -38,6 +38,7 @@ from .calling import *
 from .commands import send_wcs_saytext_by_index
 from .effects import attach_entity_to_player
 from .experience import *
+from .extensions import *
 from .menus import *
 from .players import player_dict
 from .translations import admin_strings
@@ -148,6 +149,10 @@ def _spend_skills_on_level_up(player, race, amount):
     Callback for the race_level_up event to handle menu sending,
     bot auto-upgrades and level up effects.
     """
+    if (race.level > sum(skill.max_level for skill in race.skills) or
+        race.level > race.max_level):
+        return
+    
     spend_skills_menu.send(player.index)
 
     if player.steamid == 'BOT':
