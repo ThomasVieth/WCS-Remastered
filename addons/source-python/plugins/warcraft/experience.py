@@ -77,7 +77,7 @@ def _on_player_died_give_experience(event_data):
 
     if event_data["headshot"]:
         attacker.race.experience_up(experience_for_headshot.cvar.get_int())
-        experience_up_message.send(attacker.index, amount=experience_for_kill.cvar.get_int(),
+        experience_up_message.send(attacker.index, amount=experience_for_headshot.cvar.get_int(),
             reason=headshot_reason)
     else:
         attacker.race.experience_up(experience_for_kill.cvar.get_int())
