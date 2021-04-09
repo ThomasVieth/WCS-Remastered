@@ -155,6 +155,7 @@ class Reincarnation(Skill):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.weapons = []
+        self.location = None
 
     @classproperty
     def description(cls):
@@ -181,12 +182,13 @@ class Reincarnation(Skill):
 
     @events('player_death')
     def _on_death_respawn(self, player, **kwargs):
-        if randint(1, 101) <= 100: ##25 + self.level:
+        if randint(1, 101) <= 25 + self.level:
             player.delay(1.5, player.spawn)
             player.delay(2, self._force_drop_weapons, args=(player, ))
             for weapon in self.weapons:
                 player.delay(3, player.give_named_item, args=(weapon, ))
-            player.delay(2.2, player.teleport, args=(self.location, ))
+            if self.location:
+                player.delay(2.2, player.teleport, args=(self.location, ))
 
             send_wcs_saytext_by_index(self._msg_a, player.index)
 
