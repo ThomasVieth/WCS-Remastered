@@ -75,6 +75,9 @@ def _on_personal_call_events(event_data):
         return
     kwargs = event_data.variables.as_dict()
 
+    if event_data.name == 'player_spawn' and player.ignored_spawn_events < 2:
+        player.ignored_spawn_events += 1
+        return
     player.call_events(event_data.name, player=player, **kwargs)
 
 @Event('player_hurt')

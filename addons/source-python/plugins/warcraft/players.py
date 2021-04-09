@@ -12,7 +12,7 @@ from sqlalchemy import and_
 
 from engines.server import engine_server
 from events import Event
-from listeners import OnClientDisconnect
+from listeners import OnClientDisconnect, OnClientFullyConnect
 from players.dictionary import PlayerDictionary
 from players.entity import Player as SPPlayer
 
@@ -45,6 +45,8 @@ class Player(SPPlayer):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
+
+		self.ignored_spawn_events = 0
 
 		## Validate player data.
 		player_data = session.query(dbPlayer).filter(dbPlayer.steamid == self.identifier).first()
@@ -203,10 +205,12 @@ class Player(SPPlayer):
 
 player_dict = PlayerDictionary(factory=Player)
 
-@Event("player_connect")
-def _player_initialize(event_data):
-	userid = event_data["userid"]
-	player = player_dict.from_userid(userid)
+@OnClientFullyConnect
+def on_client_fully_connect(index):
+	if index == 0:
+		return
+	player = player_dict[index]
+	##player.is_connected = True
 
 @OnClientDisconnect
 def _player_cleanup(index):
