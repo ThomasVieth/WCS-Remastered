@@ -124,22 +124,22 @@ class SubclassFinder:
         return sorted(subclasses, *args, **kwargs)
 
     @classproperty
-    def list_subclasses(cls) -> list:
+    def subclasses(cls) -> list:
         """Lists all subclasses of this class and sorts them using the *args and **kwargs."""
         subclasses = list()
         for subcls in cls.__subclasses__():
             subclasses.append(subcls)
-            subclasses.extend(subcls.list_subclasses())
-        return sorted(subclasses)
+            subclasses.extend(subcls.subclasses)
+        return sorted(subclasses, key=lambda x: x.name)
 
     @classproperty
-    def list_subclasses_as_dict(cls) -> dict:
+    def subclasses_as_dict(cls) -> dict:
         """Lists all subclasses of this class and sorts them using the *args and **kwargs."""
         subclasses = dict()
         for subcls in cls.__subclasses__():
             subclasses[subcls.name] = subcls
-            subclasses.update(subcls.list_subclasses_as_dict())
-        return sorted(subclasses)
+            subclasses.update(subcls.subclasses_as_dict)
+        return sorted(subclasses, key=lambda x: x.name)
 
 ##
 
