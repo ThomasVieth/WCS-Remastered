@@ -113,7 +113,7 @@ class SpikedCarapace(Skill):
         info = TakeDamageInfo()
         info.inflictor = victim.index
         info.damage = self.reflect_damage
-        attacker.on_take_damage.call_trampoline(info)
+        attacker.on_take_damage(info)
 
 
 @CryptLord.add_skill
