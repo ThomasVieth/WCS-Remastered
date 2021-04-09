@@ -166,6 +166,11 @@ class Reincarnation(Skill):
 
     _msg_a = '{ORANGE}Respawning {PALE_GREEN}in {GREEN}1 {PALE_GREEN}second.'
 
+    def _force_drop_weapons(self, player):
+        for index in player.weapon_indexes(not_filters='knife'):
+            entity = Entity(index)
+            player.drop_weapon(entity.pointer, None, None)
+
     @events('player_pre_victim')
     def _on_pre_death_obtain_weapons(self, victim, **kwargs):
         self.weapons = [Entity(index).class_name for index in victim.weapon_indexes(
@@ -176,14 +181,12 @@ class Reincarnation(Skill):
 
     @events('player_death')
     def _on_death_respawn(self, player, **kwargs):
-        if randint(1, 101) <= 25 + self.level:
+        if randint(1, 101) <= 100: ##25 + self.level:
             player.delay(1.5, player.spawn)
-            for index in player.weapon_indexes(not_filters='knife'):
-                entity = Entity(index)
-                player.delay(1.7, player.drop_weapon, args=(entity.pointer, None, None))
+            player.delay(2, self._force_drop_weapons, args=(player, ))
             for weapon in self.weapons:
-                player.delay(2.2, player.give_named_item, args=(weapon, ))
-            player.delay(2.3, player.teleport, args=(self.location, ))
+                player.delay(3, player.give_named_item, args=(weapon, ))
+            player.delay(2.2, player.teleport, args=(self.location, ))
 
             send_wcs_saytext_by_index(self._msg_a, player.index)
 

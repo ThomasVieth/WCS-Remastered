@@ -13,6 +13,7 @@ from engines.precache import Model
 from engines.sound import StreamSound
 from entities.entity import Entity
 from listeners.tick import Delay
+from mathlib import Vector
 
 ## warcraft.package imports
 
@@ -110,7 +111,10 @@ class HammerOfJustice(Skill):
     @events('player_pre_attack')
     def _on_player_pre_attack(self, attacker, victim, **kwargs):
         if randint(1, 100) < 10 + self.level and not victim.stuck:
-            victim.push(1, 200, False)
+            velocity = Vector()
+            victim.get_velocity(velocity, None)
+            velocity.z = 20
+            victim.base_velocity = velocity
             victim.delay(0.8, victim.__setattr__, args=('stuck', True))
             victim.delay(1.8, victim.__setattr__, args=('stuck', False))
 

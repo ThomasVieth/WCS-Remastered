@@ -83,10 +83,10 @@ class Phoenix(Skill):
 
     @events('any_death')
     def _on_any_death(self, player, **kwargs):
-        if self._should_respawn:
+        if self._should_respawn and player.team == self.parent.parent.team:
             send_wcs_saytext_by_index(self._msg_a, player.index)
             Delay(1, player.spawn)
-        self._should_respawn = False
+            self._should_respawn = False
 
 @BloodElfArchmage.add_skill
 class ArcaneBrilliance(Skill):

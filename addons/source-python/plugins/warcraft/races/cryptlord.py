@@ -9,6 +9,7 @@ from random import choice, randint
 ## source.python imports
 
 from entities import TakeDamageInfo
+from mathlib import Vector
 from messages import Shake
 
 ## warcraft.package imports
@@ -54,10 +55,13 @@ class Impale(Skill):
 
     _msg_a = '{{PALE_GREEN}}You {{DULL_RED}}impaled {{RED}}{name}{{GREEN}}!'
 
-    @events('player_pre_attack')
-    def _on_player_pre_attack_impale(self, attacker, victim, **kwargs):
-        if randint(1, 100) <= 7 + self.level and not victim.dead:
-            victim.push(1, 200, True)
+    @events('player_attack')
+    def _on_player_attack_impale(self, attacker, victim, **kwargs):
+        if randint(1, 100) <= 100 and not victim.dead: ## 7 + self.level
+            velocity = Vector()
+            victim.get_velocity(velocity, None)
+            velocity.z = 200.0
+            victim.base_velocity = velocity
             Shake(100, 1.5).send(victim.index)
             send_wcs_saytext_by_index(self._msg_a.format(name=victim.name), attacker.index)
 

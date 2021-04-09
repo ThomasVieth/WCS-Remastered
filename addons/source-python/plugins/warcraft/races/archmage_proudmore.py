@@ -116,6 +116,8 @@ class WeaponOfTheSorcerer(Skill):
             for index in player.weapon_indexes(not_filters='knife'):
                 player.drop_weapon(pointer_from_index(index))
             player.delay(0.2, player.give_named_item, args=(self.weapon, ))
+            if self.level > 4:
+                player.delay(0.2, player.give_named_item, args=(self._weapon_list[0], ))
 
 
 @ArchmageProudmore.add_skill
@@ -137,6 +139,10 @@ class LiftOff(Skill):
     def is_available(cls, player):
         return player.race.level > 8
 
+    @property
+    def health(self):
+        return 8 + (self.level * 2)
+
     _msg_c = '{{BLUE}}Lift Off {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
 
     @clientcommands('ultimate')
@@ -144,6 +150,7 @@ class LiftOff(Skill):
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             player.move_type = MoveType.WALK if player.move_type == MoveType.FLY else MoveType.FLY
+            player.health += self.health
             self.cooldowns['ultimate'] = (7 - self.level)
         else:
             send_wcs_saytext_by_index(self._msg_c.format(time=_cooldown), player.index)

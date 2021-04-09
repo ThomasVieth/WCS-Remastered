@@ -11,6 +11,7 @@ from random import randint
 from effects.base import TempEntity
 from engines.sound import StreamSound
 from engines.precache import Model
+from entities import TakeDamageInfo
 from filters.players import PlayerIter
 
 ## warcraft.package imports
@@ -95,7 +96,7 @@ class ThornsAura(Skill):
         info.inflictor = victim.index
         info.damage = self.reflect_damage
         attacker.on_take_damage.call_trampoline(info)
-        send_wcs_saytext_by_index(self._msg_a.format(damage=reflect_damage, name=attacker.name), victim.index)
+        send_wcs_saytext_by_index(self._msg_a.format(damage=self.reflect_damage, name=attacker.name), victim.index)
 
 
 @NightElves.add_skill
