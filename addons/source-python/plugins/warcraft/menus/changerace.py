@@ -34,6 +34,7 @@ def _on_change_race_build(menu, index):
                         requirement_string=race_cls.requirement_string
                     ),
                     race_cls,
+                    highlight=False,
                     selectable=False
                 )
             )

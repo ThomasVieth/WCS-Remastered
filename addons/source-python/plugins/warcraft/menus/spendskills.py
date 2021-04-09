@@ -30,6 +30,7 @@ def _on_spend_skills_build(menu, index):
                 spendskills_menu_strings['skill'].get_string(name=skill.name,
                     level=skill.level, max_level=skill.max_level),
                 skill,
+                highlight=selectable,
                 selectable=selectable
             )
         )
