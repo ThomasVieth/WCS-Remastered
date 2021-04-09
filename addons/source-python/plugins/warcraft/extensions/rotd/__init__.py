@@ -5,7 +5,7 @@
 ## python imports
 
 from datetime import datetime
-from random import choice
+from random import choice, choices
 
 ## source.python imports
 
@@ -36,6 +36,20 @@ with ConfigManager("warcraft/rotd") as manager:
     ## Add the package header.
     manager.header = "Warcraft Source - ROTD"
 
+    rotd_count = manager.cvar(
+        "warcraft_rotd_amount",
+        2,
+        "The amount of races to add as ROTD.\n",
+        ConVarFlags.NOTIFY
+    )
+
+    should_remove_requirements = manager.cvar(
+        "warcraft_rotd_remove_requirements",
+        True,
+        "Should the race lose its requirements to use?\n",
+        ConVarFlags.NOTIFY
+    )
+
     experience_for_kill = manager.cvar(
         "warcraft_rotd_experience_for_kill",
         50,
@@ -59,23 +73,38 @@ with ConfigManager("warcraft/rotd") as manager:
 
 ## globals
 
-rotd_class = None ## the race class
+rotd_classes = [] ## the race class
+rotd_requirement_funcs = []
 rotd_date = None ## the date of the race class assignment
 rotd_strings = LangStrings("warcraft/extensions/rotd")
+rotd_advert_message = SayText2(message=rotd_strings["advert"])
 rotd_broadcast_message = SayText2(message=rotd_strings["broadcast"])
+rotd_broadcast_plural_message = SayText2(message=rotd_strings["broadcast_plural"])
 rotd_experience_up = SayText2(message=rotd_strings["experience_up"])
 
-def get_rotd_class():
-    return rotd_class
+def get_rotd_classes():
+    return rotd_classes
 
-def get_rotd_name():
-    return rotd_class.name
+def get_rotd_names():
+    return list(map(cls.name for cls in rotd_classes))
 
-def randomise_rotd_class():
-    global rotd_class, rotd_date
+def randomise_rotd_classes():
+    global rotd_date
+    if len(rotd_requirement_funcs) > 0:
+        for index, rotd_class in enumerate(rotd_classes):
+            if rotd_requirement_funcs[index]:
+                rotd_class.is_available = rotd_requirement_funcs[index]
+
     races = Race.subclasses
-    rotd_class = choice(races)
+    rotd_requirement_funcs.clear()
+    rotd_classes.clear()
+    rotd_classes.extend(choices(races, k=rotd_count.cvar.get_int()))
     rotd_date = datetime.today().strftime('%Y-%m-%d')
+
+    if should_remove_requirements.cvar.get_bool():
+        for index, rotd_class in enumerate(rotd_classes):
+            rotd_requirement_funcs[index] = rotd_class.is_available
+            rotd_class.is_available = classmethod(lambda cls, player: True)
 
 ## file store
 
@@ -87,7 +116,8 @@ def write_to_rotd_file(fp):
     date = datetime.today().strftime('%Y-%m-%d')
 
     ## write the data.
-    fp.write(f"{date} {rotd_class.__name__}")
+    rotd_classnames = ','.join(cls.name for cls in rotd_classes)
+    fp.write(f"{date} {rotd_classnames}")
 
 def load_from_rotd_file(fp):
     ## reset the pointer.
@@ -99,10 +129,10 @@ def load_from_rotd_file(fp):
     ## gather date.
     date = data[:10]
 
-    ## gather race classname
-    classname = data[11:]
+    ## gather race classnames
+    classnames = data[11:]
 
-    return date, classname
+    return date, classnames.split(',')
 
 rotd_data_dir = CUSTOM_DATA_PATH / "warcraft" / "rotd"
 if not rotd_data_dir.exists():
@@ -112,13 +142,16 @@ rotd_file = rotd_data_dir / "rotd.txt"
 with rotd_file.open("a+") as rotd_fp:
     data = rotd_fp.read()
     if not data:
-        randomise_rotd_class()
+        randomise_rotd_classes()
+        write_to_rotd_file(rotd_fp)
     else:
-        load_from_rotd_file(fp)
+        date, classnames = load_from_rotd_file(rotd_fp)
+        rotd_date = date
+        rotd_classes.extend(race_cls for race_cls in Race.subclasses if race_cls.__name__ in classnames)
 
 date = datetime.today().strftime('%Y-%m-%d')
 if rotd_date != date:
-    randomise_rotd_class()
+    randomise_rotd_classes()
 
 ## handlers
 
@@ -126,7 +159,7 @@ if rotd_date != date:
 def _on_level_init_check_day(map_name):
     date = datetime.today().strftime('%Y-%m-%d')
     if rotd_date != date:
-        randomise_rotd_class()
+        randomise_rotd_classes()
 
         with rotd_file.open("a+") as rotd_fp:
             write_to_rotd_file(rotd_fp)
@@ -135,7 +168,19 @@ def _on_level_init_check_day(map_name):
 
 @Event("round_start")
 def _on_round_start(event_data):
-    rotd_broadcast_message.send(name=rotd_class.name)
+    kwargs = {}
+    if len(rotd_classes) > 1:
+        broadcast_message = rotd_broadcast_plural_message
+        kwargs['names'] = ', '.join(cls.name for cls in rotd_classes)
+    else:
+        broadcast_message = rotd_broadcast_message
+        kwargs['name'] = ','.join(cls.name for cls in rotd_classes)
+
+    message = choice([broadcast_message, rotd_advert_message])
+    if len(kwargs):
+        message.send(**kwargs)
+    else:
+        message.send()
 
 @Event("player_death")
 def _on_player_kill(event_data):
@@ -143,7 +188,7 @@ def _on_player_kill(event_data):
         return
 
     attacker = player_dict.from_userid(event_data['attacker'])
-    if not attacker.race.__class__ == rotd_class:
+    if not attacker.race.__class__ in rotd_classes:
         return
 
     if not event_data["headshot"]:
@@ -159,7 +204,7 @@ def _on_player_kill(event_data):
 def _on_round_end(event_data):
     winner = event_data['winner']
     for player in player_dict.values():
-        if not player.race.__class__ == rotd_class:
+        if not player.race.__class__ in rotd_classes:
             return
 
         if player.team == winner:
