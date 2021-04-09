@@ -11,6 +11,8 @@ from messages import SayText2
 
 from warcraft.config import (
     experience_for_kill,
+    experience_for_headshot,
+    experience_for_level_difference,
     experience_for_win,
     experience_for_loss,
     experience_punish_for_loss,
@@ -32,6 +34,8 @@ level_up_message = SayText2(message=experience_strings["level_up"])
 level_down_message = SayText2(message=experience_strings["level_down"])
 
 kill_reason = experience_strings["reason_kill"]
+headshot_reason = experience_strings["reason_headshot"]
+higher_level_reason = experience_strings["reason_higher_level"]
 assist_reason = experience_strings["reason_assist"]
 win_reason = experience_strings["reason_win"]
 loss_reason = experience_strings["reason_loss"]
@@ -71,9 +75,20 @@ def _on_player_died_give_experience(event_data):
     if 'assister' in event_data.variables and event_data['assister']:
         assister = player_dict.from_userid(event_data['assister'])
 
-    attacker.race.experience_up(experience_for_kill.cvar.get_int())
-    experience_up_message.send(attacker.index, amount=experience_for_kill.cvar.get_int(),
-        reason=kill_reason)
+    if event_data["headshot"]:
+        attacker.race.experience_up(experience_for_headshot.cvar.get_int())
+        experience_up_message.send(attacker.index, amount=experience_for_kill.cvar.get_int(),
+            reason=headshot_reason)
+    else:
+        attacker.race.experience_up(experience_for_kill.cvar.get_int())
+        experience_up_message.send(attacker.index, amount=experience_for_kill.cvar.get_int(),
+            reason=kill_reason)
+
+    victim = player_dict.from_userid(event_data['userid'])
+    difference = victim.race.level - attacker.race.level
+    if difference > 0:
+        amount = difference * experience_for_kill.cvar.get_int()
+        experience_up_message.send(attacker.index, amount=amount, reason=higher_level_reason)
 
     if assister:
         assister.race.experience_up(experience_for_kill.cvar.get_int())

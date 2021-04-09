@@ -16,6 +16,8 @@ __all__ = (
 	"race_maximum_level",
 	"race_bot_options",
 	"experience_for_kill",
+	"experience_for_headshot",
+	"experience_for_level_difference",
 	"experience_for_win",
 	"experience_for_loss",
 	"experience_punish_for_loss",
@@ -78,6 +80,20 @@ with ConfigManager("warcraft") as manager:
 		"warcraft_experience_for_kill",
 		50,
 		"The experience gained for killing another player.",
+		ConVarFlags.NOTIFY
+	)
+
+	experience_for_headshot =  manager.cvar(
+		"warcraft_experience_for_headshot",
+		80,
+		"The experience gained for killing with a headshot.",
+		ConVarFlags.NOTIFY
+	)
+
+	experience_for_level_difference =  manager.cvar(
+		"warcraft_experience_for_level_difference",
+		5,
+		"The experience gained for killing a higher level player (per level).",
 		ConVarFlags.NOTIFY
 	)
 
