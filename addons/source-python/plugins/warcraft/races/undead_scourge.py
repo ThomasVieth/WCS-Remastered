@@ -10,7 +10,9 @@ from random import randint
 
 from effects.base import TempEntity
 from engines.precache import Model
+from entities.constants import MoveType
 from filters.players import PlayerIter
+from players.constants import PlayerButtons
 from weapons.manager import weapon_manager
 
 ## warcraft.package imports
@@ -20,6 +22,8 @@ from warcraft.race import Race
 from warcraft.registration import events
 from warcraft.skill import Skill
 from warcraft.utility import classproperty
+
+from ._bases import ReduceGravitySkill
 
 ## __all__ declaration
 
@@ -139,7 +143,7 @@ class UnholyAura(Skill):
             player.speed = speed
 
 @UndeadScourge.add_skill
-class Levitation(Skill):
+class Levitation(ReduceGravitySkill):
 
     @classproperty
     def description(cls):
@@ -149,14 +153,11 @@ class Levitation(Skill):
     def max_level(cls):
         return 8
 
+    @property
+    def reduction(self):
+        return 0.06 * self.level
+
     _msg_a = '{{PALE_GREEN}}Reduced {{DULL_RED}}damage taken {{PALE_GREEN}}from {{RED}}{name}.'
-
-    @events('player_spawn')
-    def _on_player_spawn(self, player, **eargs):
-        if self.level == 0:
-            return
-
-        player.gravity = 1 - 0.08 * self.level
 
     @events('player_pre_victim')
     def _on_player_pre_victim(self, attacker, victim, info, **eargs):

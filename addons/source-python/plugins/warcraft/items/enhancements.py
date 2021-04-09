@@ -4,8 +4,10 @@
 
 ## source.python imports
 
+from entities.constants import MoveType
 from listeners.tick import Delay
 from mathlib import Vector
+from players.constants import PlayerButtons
 
 ## warcraft.package imports
 
@@ -83,15 +85,44 @@ class GryphonFeather(Item):
     def requirement_sort_key(cls):
         return cls.cost
 
+    @property
+    def min_gravity(self):
+        return 0.1
+    
+    @property
+    def reduction(self):
+        return 0.35
+
+    def reduce_gravity(self, player, value):
+        if player.gravity < self.min_gravity:
+            player.gravity = max(1 - value, self.min_gravity)
+            return
+        player.gravity = max(player.gravity - value, self.min_gravity)
+
     def on_purchase(self, player):
         super().on_purchase(player)
         player.cash -= self.cost
-        player.gravity = max(player.gravity - 0.35, 0)
-        send_wcs_saytext_by_index(self._msg_purchase, player.index)
+        self.reduce_gravity(player, self.reduction)
+        self.state = player.move_type
+        send_wcs_saytext_by_index(self._msg_purchase, player.index)    
+
+    @events('player_pre_run_command')
+    def _on_player_run_command(self, player, usercmd, **kwargs):
+        if (usercmd.buttons & PlayerButtons.FORWARD
+            or usercmd.buttons & PlayerButtons.BACK
+            or usercmd.buttons & PlayerButtons.MOVELEFT
+            or usercmd.buttons & PlayerButtons.MOVERIGHT
+            or usercmd.buttons & PlayerButtons.JUMP):
+            if self.state == player.move_type:
+                return
+
+            if self.state == MoveType.LADDER:
+                self.reduce_gravity(player, self.reduction)
+            self.state = player.move_type
 
     @events('player_spawn')
     def _on_player_spawn(self, player, **kwargs):
-        player.gravity = max(player.gravity - 0.35, 0)
+        Delay(0.5, self.reduce_gravity, args=(player, self.reduction))
 
     @events('player_death')
     def _on_player_death(self, player, **kwargs):
