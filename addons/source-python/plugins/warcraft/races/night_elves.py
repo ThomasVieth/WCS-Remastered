@@ -95,7 +95,7 @@ class ThornsAura(Skill):
         info = TakeDamageInfo()
         info.inflictor = victim.index
         info.damage = self.reflect_damage
-        attacker.on_take_damage.call_trampoline(info)
+        attacker.on_take_damage(info)
         send_wcs_saytext_by_index(self._msg_a.format(damage=self.reflect_damage, name=attacker.name), victim.index)
 
 
