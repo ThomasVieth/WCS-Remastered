@@ -39,7 +39,7 @@ def _on_client_full_connect_setup_levelbank(index):
 
 ## handling client/say commands
 
-@ClientCommand("levelbank")
-@SayCommand("levelbank")
+@ClientCommand(["levelbank", "wcsbank"])
+@SayCommand(["levelbank", "wcsbank"])
 def _levelbank_say_command(command, index, team_only=None):
     levelbank_menu.send(index)
