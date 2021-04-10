@@ -168,6 +168,7 @@ class Player(SPPlayer):
 
 		This in-turn obtains the race data, kills the user, and then initializes the new object.
 		"""
+		self.update_race_data()
 		race_data = self.get_race_data(race_cls)
 		self.client_command("kill", True)
 		self.race = self.init_race_from_data(race_cls, race_data)
