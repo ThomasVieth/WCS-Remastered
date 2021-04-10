@@ -52,6 +52,7 @@ def _on_levelbank_menu_select(menu, index, choice):
     player_levelbank, amount = choice.value
     player.race.level_up(amount)
     player_levelbank.levels -= amount
+    return menu
 
 ## menu declarations
 
