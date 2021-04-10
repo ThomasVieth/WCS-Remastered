@@ -20,6 +20,7 @@ from players.entity import Player as SPPlayer
 
 from warcraft.config import default_race, race_minimum_level
 from warcraft.database import session, Race as dbRace, Skill as dbSkill, Player as dbPlayer
+from warcraft.events import call_event
 from warcraft.logging import debug, error, WARCRAFT_LOG_PATH
 from warcraft.race import Race
 
@@ -168,11 +169,21 @@ class Player(SPPlayer):
 
 		This in-turn obtains the race data, kills the user, and then initializes the new object.
 		"""
-		self.update_race_data()
-		race_data = self.get_race_data(race_cls)
-		self.client_command("kill", True)
-		self.race = self.init_race_from_data(race_cls, race_data)
-		self.update_user_data()
+		self.update_race_data() ## save current race data
+		race_data = self.get_race_data(race_cls) ## gather new race data
+		self.client_command("kill", True) ## kill the user between race changes
+		new_race = self.init_race_from_data(race_cls, race_data) ## build new race object
+		call_event(
+			"race_change",
+			[],
+			{
+				"player": self,
+				"old_race": self.race,
+				"new_race": new_race
+			}
+		) ## call race_change event
+		self.race = new_race ## assign new race to player
+		self.update_user_data() ## update database to represent race change
 
 	@property
 	def total_level(self):
