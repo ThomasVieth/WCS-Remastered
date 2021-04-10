@@ -117,6 +117,7 @@ def update_requirement_funcs():
 ## file store
 
 def write_to_rotd_file(fp):
+    fp.truncate(0)
     ## reset the pointer.
     fp.seek(0)
 
