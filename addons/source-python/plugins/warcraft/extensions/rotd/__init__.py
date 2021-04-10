@@ -163,6 +163,9 @@ date = datetime.today().strftime('%Y-%m-%d')
 if rotd_date != date:
     randomise_rotd_classes()
 
+    with rotd_file.open("a+") as rotd_fp:
+        write_to_rotd_file(rotd_fp)
+
 ## handlers
 
 @OnLevelInit
