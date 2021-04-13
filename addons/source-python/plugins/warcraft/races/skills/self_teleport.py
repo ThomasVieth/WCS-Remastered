@@ -42,11 +42,7 @@ class TeleportSkill(Skill):
 
     @property
     def distance(self):
-        return 300 + 50 * self.level
-
-    @property
-    def retry_distance(self):
-        return 100 + 50 * self.level
+        return 300 + 75 * self.level
 
     @events('player_spawn')
     def _on_player_spawn_reset(self, player, **eargs):
@@ -69,12 +65,12 @@ class TeleportSkill(Skill):
         trace_vector2.y += 26
 
         check1 = self._get_trace(
-                    origin, teleport_vector, ContentMasks.ALL, player,
+                    origin, teleport_vector, ContentMasks.PLAYER_SOLID, player,
                     GameTrace()
                     )
 
         check2 = self._get_trace(
-                    trace_vector1, trace_vector2, ContentMasks.ALL, player,
+                    trace_vector1, trace_vector2, ContentMasks.PLAYER_SOLID, player,
                     GameTrace()
                     )
 
@@ -92,7 +88,7 @@ class TeleportSkill(Skill):
             check1, check2 = self.validate_teleport(player, origin, teleport_vector)
 
             if check1.did_hit() or check2.did_hit():
-                teleport_vector = origin + (view_vector * self.retry_distance)
+                teleport_vector = check1.end_position - (view_vector * 50)
                 check3, check4 = self.validate_teleport(player, origin, teleport_vector)
                 if check3.did_hit() or check4.did_hit():
                     send_wcs_saytext_by_index(self._msg_f, player.index)

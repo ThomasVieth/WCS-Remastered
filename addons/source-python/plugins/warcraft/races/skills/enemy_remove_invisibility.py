@@ -8,6 +8,7 @@ from random import randint
 
 ## warcraft.package imports
 
+from warcraft.commands.messages import send_wcs_saytext_by_index
 from warcraft.registration import events
 from warcraft.skill import Skill
 
