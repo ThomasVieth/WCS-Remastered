@@ -38,7 +38,7 @@ class FlamePredator(Race):
 
     @classproperty
     def requirement_sort_key(cls):
-        return 10
+        return 11
 
     @events('player_spawn')
     def player_spawn(self, player, **kwargs):
