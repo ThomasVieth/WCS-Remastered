@@ -57,11 +57,9 @@ class Impale(Skill):
 
     @events('player_attack')
     def _on_player_attack_impale(self, attacker, victim, **kwargs):
-        if randint(1, 100) <= 100 and not victim.dead: ## 7 + self.level
-            velocity = Vector()
-            victim.get_velocity(velocity, None)
-            velocity.z = 200.0
-            victim.base_velocity = velocity
+        if randint(1, 100) <= 7 + self.level and not victim.dead:
+            victim.base_velocity = Vector(0, 0, 300)
+
             Shake(100, 1.5).send(victim.index)
             send_wcs_saytext_by_index(self._msg_a.format(name=victim.name), attacker.index)
 
