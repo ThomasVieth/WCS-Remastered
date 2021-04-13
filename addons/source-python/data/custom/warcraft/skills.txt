@@ -52,4 +52,3 @@ TeleportSkill
         _msg_f - The message to send upon the ultimate failing.
         cooldown - The cooldown to apply once the ultimate is used.
         distance - The distance to teleport the player.
-        retry_distace - The distance to teleport when first teleport fails.
