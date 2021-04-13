@@ -64,6 +64,7 @@ def _on_items_select(menu, index, choice):
     ## Notify of purchase.
     player.items.append(item)
     item.on_purchase(player)
+    return menu
 
 ## menu declarations
 
