@@ -10,6 +10,7 @@ from random import randint
 ## source.python imports
 
 from colors import Color
+from engines.precache import Model
 from engines.sound import StreamSound
 from entities.constants import RenderMode
 from entities.entity import Entity
@@ -33,6 +34,7 @@ __all__ = ("Warden", )
 ## warden declaration
 
 poison_sound = StreamSound('source-python/warcraft/poison.wav', download=True)
+redflare_material = Model('Effects/Redflare.vmt', True)
 
 class Warden(Race):
 

@@ -40,6 +40,7 @@ __all__ = ("BloodElfArchmage", )
 ## bloodelfarchmage declaration
 
 ice_sound = StreamSound('source-python/wcgo/icehit.mp3', download=True)
+rain_material = Model('particle/rain.vmt', True)
 
 class BloodElfArchmage(Race):
 
