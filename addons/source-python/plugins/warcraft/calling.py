@@ -17,13 +17,15 @@ from players.helpers import userid_from_pointer
 
 ## warcraft.package imports
 
-from .players import player_dict
+from . import players
 
 ## __all__ declaration
 
 __all__ = ()
 
 ## event listeners
+
+player_dict = players.player_dict
 
 @Event('round_end', 'round_start')
 def _on_round_call_events(event_data):
@@ -34,6 +36,10 @@ def _on_round_call_events(event_data):
 
 @Event('player_death')
 def _on_kill_assist_call_events(event_data):
+    if players.ignore_damage_events:
+        players.ignore_damage_events = False
+        return
+
     if event_data['userid'] == event_data['attacker'] or event_data['attacker'] == 0:
         player = player_dict.from_userid(event_data['userid'])
         player.call_events('player_suicide', player=player)
@@ -82,6 +88,10 @@ def _on_personal_call_events(event_data):
 
 @Event('player_hurt')
 def _on_hurt_call_events(event_data):
+    if players.ignore_damage_events:
+        players.ignore_damage_events = False
+        return
+    
     if event_data['userid'] == event_data['attacker'] or event_data['attacker'] == 0:
         return
 
@@ -105,7 +115,7 @@ def _on_hurt_call_events(event_data):
 @EntityPreHook(EntityCondition.is_player, 'on_take_damage')
 def _pre_damage_call_events(stack_data):
     take_damage_info = make_object(TakeDamageInfo, stack_data[1])
-    if take_damage_info.attacker:
+    if take_damage_info.attacker and not players.ignore_damage_events:
         entity = Entity(take_damage_info.attacker)
         attacker = player_dict[entity.index] if entity.is_player() else None
         victim = player_dict[index_from_pointer(stack_data[0])]

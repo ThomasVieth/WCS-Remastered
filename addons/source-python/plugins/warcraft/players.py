@@ -26,8 +26,7 @@ from warcraft.race import Race
 
 ## __all__ declaration
 
-__all__ = ("player_dict", "Player", )
-
+__all__ = ("player_dict", "Player", "ignore_damage_events")
 
 ## logging definition
 
@@ -213,9 +212,15 @@ class Player(SPPlayer):
 		for item in items:
 			item.call_clientcommands(command_name, *args, **kwargs)
 
+	def take_damage(self, *args, **kwargs):
+		global ignore_damage_events
+		ignore_damage_events = True
+		super().take_damage(*args, **kwargs)
+
 ## core
 
 player_dict = PlayerDictionary(factory=Player)
+ignore_damage_events = False
 
 @OnClientFullyConnect
 def on_client_fully_connect(index):
