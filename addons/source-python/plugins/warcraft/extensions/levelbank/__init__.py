@@ -4,6 +4,7 @@
 
 ## source.python imports
 
+from commands import CommandReturn
 from commands.client import ClientCommand
 from commands.say import SayCommand
 from listeners import OnClientFullyConnect
@@ -43,3 +44,4 @@ def _on_client_full_connect_setup_levelbank(index):
 @SayCommand(["levelbank", "wcsbank"])
 def _levelbank_say_command(command, index, team_only=None):
     levelbank_menu.send(index)
+    return CommandReturn.BLOCK
