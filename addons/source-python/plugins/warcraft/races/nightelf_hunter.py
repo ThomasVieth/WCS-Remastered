@@ -89,7 +89,7 @@ class Shadowmeld(Skill):
     def alpha(self):
         return 255 - (self.level * 15)
 
-    @events('player_death', 'player_spawn')
+    @events('player_suicide', 'player_death', 'player_spawn')
     def _on_player_death(self, player, **eargs):
         color = player.color
         color.a = 255
