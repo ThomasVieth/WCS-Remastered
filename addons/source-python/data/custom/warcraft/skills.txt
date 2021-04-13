@@ -1,0 +1,41 @@
+--- SPAWN ---
+
+InvisibilitySkill
+:properties:
+    alpha - The alpha value to set to the player upon spawning.
+
+ReduceGravitySkill
+:properties:
+    min_gravity - The minimum gravity to allow setting when adjusting values.
+    reduction - The value to reduce the player's gravity by.
+
+SpeedSkill
+:properties:
+    base_speed_addition - The value to increase a player's speed by on spawn.
+
+HealthScalingSpeedSkill
+:properties:
+    base_speed_addition - The value to increase a player's speed by on spawn.
+
+:functions:
+    scale_speed_calc - The function to call when calculating the new speed to set (params: player).
+
+--- ATTACK ---
+
+LifestealSkill
+:properties:
+    _msg_a - The message to send to the player upon lifestealing.
+    chance - The chance for lifesteal to occur (1 - 100).
+    leech_multiplier - The multiplier to apply against the damage and then heal for.
+
+RemoveInvisibilitySkill
+:properties:
+    _msg_a - The message to send to the player removing the invisibility.
+    _msg_b - The message to send to the player having invisibility removed.
+
+-- DEATH ---
+
+ExplosionSkill
+:properties:
+    range - The range of the explosion effect and damage radius.
+    magnitude - The damage to deal to enemies within the range value.

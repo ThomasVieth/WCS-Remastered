@@ -6,20 +6,18 @@
 
 from entities.constants import MoveType
 from listeners.tick import Delay
-from messages import SayText2
 from players.constants import PlayerButtons
 
 ## warcraft.package imports
 
-from warcraft.registration import events, clientcommands
+from warcraft.registration import events
 from warcraft.skill import Skill
-from warcraft.utility import classproperty
 
 ## __all__ declaration
 
 __all__ = ("ReduceGravitySkill", )
 
-## reducegravity declaration
+## reducegravityskill declaration
 
 class ReduceGravitySkill(Skill):
 

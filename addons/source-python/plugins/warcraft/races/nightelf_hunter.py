@@ -53,7 +53,7 @@ class NightElfHunter(Race):
 
     @classmethod
     def is_available(cls, player):
-        return player.total_level > 50
+        return player.total_level > 100
 
     @classproperty
     def requirement_string(cls):

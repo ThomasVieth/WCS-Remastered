@@ -22,8 +22,15 @@ from warcraft.utility import classproperty
 
 ## __all__ declaration
 
-modules = glob(dirname(__file__) + '/*.py')
-__all__ = ["ini_races", "load_ini_races"] + list(basename(f)[:-3] for f in modules if isfile(f))
+modules = glob(dirname(__file__) + '/*')
+__all__ = ["ini_races", "load_ini_races"]
+
+for f in modules:
+    f_basename = basename(f)
+    if isfile(f):
+        __all__.append(f_basename[:-3])
+    elif f_basename != "races":
+        __all__.append(f_basename)
 
 ## generate functions
 

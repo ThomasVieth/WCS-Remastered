@@ -10,40 +10,44 @@ Human Alliance
     Invisibility
     Cauterize Wounds
     Frost Bomb
-    Teleport
+    Teleport (Ultimate)
 
 Orcish Horde
     Blood Fury
     Earthgrab Totem
     Reincarnation
-    Chain Lightning
+    Chain Lightning (Ultimate)
 
-Night Elf Hunter
-    Shadowmeld
-    Hunters Mark
-    Serpent Sting
-    Wisp Spirit
-
---- LEVEL 50 ---
+Night Elves
+    Evasion
+    Trueshot Aura
+    Thorns Aura
+    Entangling Roots (Ultimate)
 
 Blood Elf Archmage
     Phoenix
     Arcane Brilliance
     Ice Barrier
     Blizzard
-    Blink
+    Blink (Ultimate)
 
-Demon Hunter
-    Double Jump
-    Mana Burn
-    Evasion
-    Demonic Transformation
+Archmage Proudmore
+    Earthquake
+    Broom of Velocity
+    Weapon of the Sorcerer
+    Lift Off (Ultimate)
 
-Dwarf Paladin
-    Stoneskin
-    Hammer Of Justice
-    Holy Light
-    Divine Shield
+Shadow Hunter
+    Healing Wave
+    Hex
+    Serpent Ward
+    Big Bad Voodoo (Ultimate)
+
+Crypt Lord
+    Impale
+    Spiked Carapace
+    Shadow Strike
+    Locust Swarm (Ultimate)
 
 Flame Predator
     Berserk
@@ -51,3 +55,23 @@ Flame Predator
     Levitation
     Claw Attack
     Burning Blade
+
+--- LEVEL 50 ---
+
+Demon Hunter
+    Double Jump
+    Mana Burn
+    Evasion
+    Demonic Transformation (Ultimate)
+
+Dwarf Paladin
+    Stoneskin
+    Hammer Of Justice
+    Holy Light
+    Divine Shield (Ultimate)
+
+Night Elf Hunter
+    Shadowmeld
+    Hunter's Mark
+    Serpent Sting
+    Wisp Spirit (Ultimate)
