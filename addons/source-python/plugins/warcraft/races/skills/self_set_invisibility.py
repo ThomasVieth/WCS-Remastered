@@ -15,6 +15,7 @@ __all__ = ("InvisibilitySkill", )
 
 class InvisibilitySkill(Skill):
 
+    @property
     def alpha(self):
         return 255 - (20 * self.level)
 

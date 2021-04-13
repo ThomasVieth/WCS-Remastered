@@ -2,6 +2,10 @@
 
 """
 
+## python imports
+
+from random import randint
+
 ## warcraft.package imports
 
 from warcraft.registration import events

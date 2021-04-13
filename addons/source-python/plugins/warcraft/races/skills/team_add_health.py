@@ -13,11 +13,11 @@ from warcraft.skill import Skill
 
 ## __all__ declaration
 
-__all__ = ("TeamHealthSkill", )
+__all__ = ("TeamAddHealthSkill", )
 
 ## teamhealthskill declaration
 
-class TeamHealthSkill(Skill):
+class TeamAddHealthSkill(Skill):
 
     @property
     def base_health_addition(self):

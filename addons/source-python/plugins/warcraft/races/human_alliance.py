@@ -27,9 +27,9 @@ from warcraft.utility import classproperty, CooldownDict
 
 ## warcraft.skills imports
 
-from .skills.self_set_invisibility import Invisibility as _Invisibility
-from .skills.enemy_remove_invisibility import RemoveInvisibility
-from .skills.team_add_health import TeamHealthSkill
+from .skills.self_set_invisibility import InvisibilitySkill as _InvisibilitySkill
+from .skills.enemy_remove_invisibility import RemoveInvisibilitySkill
+from .skills.team_add_health import TeamAddHealthSkill
 from .skills.enemy_shake import ShakeSkill
 from .skills.self_teleport import TeleportSkill
 
@@ -54,7 +54,7 @@ class HumanAlliance(Race):
         return 2
 
 @HumanAlliance.add_skill
-class Invisibility(_Invisibility, RemoveInvisibility):
+class Invisibility(_InvisibilitySkill, RemoveInvisibilitySkill):
 
     @classproperty
     def description(cls):
@@ -65,7 +65,7 @@ class Invisibility(_Invisibility, RemoveInvisibility):
         return 8
 
 @HumanAlliance.add_skill
-class CauterizeWounds(TeamHealthSkill):
+class CauterizeWounds(TeamAddHealthSkill):
 
     @classproperty
     def description(cls):

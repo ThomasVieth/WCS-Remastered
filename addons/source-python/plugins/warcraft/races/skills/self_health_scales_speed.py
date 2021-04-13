@@ -7,15 +7,15 @@
 from warcraft.registration import events
 from warcraft.skill import Skill
 
-from .speed import SpeedSkill
+from .self_add_speed import AddSpeedSkill
 
 ## __all__ declaration
 
-__all__ = ("HealthScalingSpeedSkill", )
+__all__ = ("HealthScalesSpeedSkill", )
 
-## healthscalingspeedskill declaration
+## healthscalespeedskill declaration
 
-class HealthScalingSpeedSkill(SpeedSkill):
+class HealthScalesSpeedSkill(AddSpeedSkill):
 
     def scale_speed_calc(self, player):
         return round(player.health / 120, 2)

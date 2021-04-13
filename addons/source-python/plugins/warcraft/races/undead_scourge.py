@@ -17,7 +17,7 @@ from warcraft.utility import classproperty
 ## warcraft.skills imports
 
 from .skills.enemy_limited_lifesteal import LifestealSkill
-from .skills.self_health_scales_speed import HealthScalingSpeedSkill
+from .skills.self_health_scales_speed import HealthScalesSpeedSkill
 from .skills.self_reduce_gravity import ReduceGravitySkill
 from .skills.self_explode import ExplosionSkill
 
@@ -64,7 +64,7 @@ class UndeadScourge(Race):
 
 
 @UndeadScourge.add_skill
-class VampiricAura(Lifesteal):
+class VampiricAura(LifestealSkill):
 
     @classproperty
     def description(cls):
@@ -76,7 +76,7 @@ class VampiricAura(Lifesteal):
 
 
 @UndeadScourge.add_skill
-class UnholyAura(HealthScalingSpeedSkill):
+class UnholyAura(HealthScalesSpeedSkill):
 
     @classproperty
     def description(cls):

@@ -9,11 +9,11 @@ from warcraft.skill import Skill
 
 ## __all__ declaration
 
-__all__ = ("SpeedSkill", )
+__all__ = ("AddSpeedSkill", )
 
 ## speedskill declaration
 
-class SpeedSkill(Skill):
+class AddSpeedSkill(Skill):
 
     @property
     def base_speed_addition(self):

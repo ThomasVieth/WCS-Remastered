@@ -25,7 +25,7 @@ class ExplosionSkill(Skill):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.explosion = TempEntity('Explosion',
-            magnitude=100, scale=40, radius=self.range, origin=player.origin)
+            magnitude=100, scale=40, radius=self.range)
 
     @property
     def range(self):
@@ -47,4 +47,4 @@ class ExplosionSkill(Skill):
                 target.take_damage(self.magnitude, attacker_index=player.index, skip_hooks=True)
                 send_wcs_saytext_by_index(self._msg_a.format(name=target.name), player.index)
 
-        self.explosion.create()
+        self.explosion.create(origin=player.origin)

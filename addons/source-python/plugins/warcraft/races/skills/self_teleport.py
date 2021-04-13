@@ -103,6 +103,6 @@ class TeleportSkill(Skill):
             else:
                 player.teleport(teleport_vector, None, None)
                 teleport_sound.play(player.index)
-                self.cooldowns['ultimate'] = cooldown
+                self.cooldowns['ultimate'] = self.cooldown
         else:
             send_wcs_saytext_by_index(self._msg_c.format(time=_cooldown), player.index)
