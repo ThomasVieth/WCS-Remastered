@@ -1,41 +1,55 @@
---- SPAWN ---
-
-InvisibilitySkill
-:properties:
-    alpha - The alpha value to set to the player upon spawning.
-
-ReduceGravitySkill
-:properties:
-    min_gravity - The minimum gravity to allow setting when adjusting values.
-    reduction - The value to reduce the player's gravity by.
-
-SpeedSkill
-:properties:
-    base_speed_addition - The value to increase a player's speed by on spawn.
+ExplosionSkill
+    :properties:
+        range - The range of the explosion effect and damage radius.
+        magnitude - The damage to deal to enemies within the range value.
 
 HealthScalingSpeedSkill
-:properties:
-    base_speed_addition - The value to increase a player's speed by on spawn.
+    :properties:
+        base_speed_addition - The value to increase a player's speed by on spawn.
 
-:functions:
-    scale_speed_calc - The function to call when calculating the new speed to set (params: player).
+    :functions:
+        scale_speed_calc - The function to call when calculating the new speed to set (params: player).
 
---- ATTACK ---
+InvisibilitySkill
+    :properties:
+        alpha - The alpha value to set to the player upon spawning.
 
 LifestealSkill
-:properties:
-    _msg_a - The message to send to the player upon lifestealing.
-    chance - The chance for lifesteal to occur (1 - 100).
-    leech_multiplier - The multiplier to apply against the damage and then heal for.
+    :properties:
+        _msg_a - The message to send to the player upon lifestealing.
+        chance - The chance for lifesteal to occur (1 - 100).
+        leech_multiplier - The multiplier to apply against the damage and then heal for.
 
 RemoveInvisibilitySkill
-:properties:
-    _msg_a - The message to send to the player removing the invisibility.
-    _msg_b - The message to send to the player having invisibility removed.
+    :properties:
+        _msg_a - The message to send to the player removing the invisibility.
+        _msg_b - The message to send to the player having invisibility removed.
+        chance - The chance to remove invisibility from the enemy.
 
--- DEATH ---
+ReduceGravitySkill
+    :properties:
+        min_gravity - The minimum gravity to allow setting when adjusting values.
+        reduction - The value to reduce the player's gravity by.
 
-ExplosionSkill
-:properties:
-    range - The range of the explosion effect and damage radius.
-    magnitude - The damage to deal to enemies within the range value.
+ShakeSkill
+    :properties:
+        _msg_a - The message to send to the player attacking.
+        chance - The chance to shake the enemy.
+        duration - The duration of the shake to the enemy.
+        magnitude - The aggresiveness of the shake on the enemy.
+
+SpeedSkill
+    :properties:
+        base_speed_addition - The value to increase a player's speed by on spawn.
+
+TeamHealthSkill
+    :properties:
+        base_health_addition - The amount of health to give to all allies on spawn.
+
+TeleportSkill
+    :properties:
+        _msg_c - The message to send upon using whilst on cooldown.
+        _msg_f - The message to send upon the ultimate failing.
+        cooldown - The cooldown to apply once the ultimate is used.
+        distance - The distance to teleport the player.
+        retry_distace - The distance to teleport when first teleport fails.

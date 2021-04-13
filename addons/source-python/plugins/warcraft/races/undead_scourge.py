@@ -16,7 +16,10 @@ from warcraft.utility import classproperty
 
 ## warcraft.skills imports
 
-from .skills import ExplosionSkill, HealthScalingSpeedSkill, LifestealSkill, ReduceGravitySkill
+from .skills.enemy_limited_lifesteal import LifestealSkill
+from .skills.self_health_scales_speed import HealthScalingSpeedSkill
+from .skills.self_reduce_gravity import ReduceGravitySkill
+from .skills.self_explode import ExplosionSkill
 
 ## __all__ declaration
 

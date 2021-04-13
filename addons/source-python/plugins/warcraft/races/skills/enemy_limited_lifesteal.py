@@ -2,6 +2,10 @@
 
 """
 
+## python imports
+
+from random import randint
+
 ## source.python imports
 
 from effects.base import TempEntity
