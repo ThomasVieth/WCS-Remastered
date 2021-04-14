@@ -13,6 +13,7 @@ from cvars.flags import ConVarFlags
 __all__ = (
     "levelbank_start_amount",
     "levelbank_menu_values",
+    "levelbank_admin_menu_values",
 )
 
 ## config
@@ -32,5 +33,12 @@ with ConfigManager("warcraft/levelbank") as manager:
         "warcraft_levelbank_menu_values",
         "1,5,10,25,40",
         "The level options available in the levelbank menu.\n",
+        ConVarFlags.NOTIFY
+    )
+
+    levelbank_admin_menu_values = manager.cvar(
+        "warcraft_levelbank_admin_menu_values",
+        "10,50,100,250,500",
+        "The level options available in the levelbank admin menu.\n",
         ConVarFlags.NOTIFY
     )
