@@ -29,6 +29,7 @@ __all__ = ("DemonHunter", )
 _knifeonly = set(weapon.basename for weapon in WeaponClassIter(not_filters='knife'))
 
 class DemonHunter(Race):
+    image = "https://cdn.discordapp.com/attachments/829011612631302204/831967566850949170/demon_hunter.png"
 
     @classproperty
     def description(cls):
@@ -75,6 +76,9 @@ class DoubleJump(Skill):
 
     @events('player_pre_run_command')
     def _on_player_run_command(self, player, usercmd, **kwargs):
+        if self.level == 0:
+            return
+
         if usercmd.buttons & PlayerButtons.JUMP and not player.buttons & PlayerButtons.JUMP and not self.has_jumped:
             if player.ground_entity == -1:
                 self.has_jumped = True
@@ -102,7 +106,7 @@ class ManaBurn(Skill):
 
     @events('player_attack')
     def _on_player_attack(self, attacker, victim, **kwargs):
-        if randint(1, 100) > 30 or victim.cash < self._cash:
+        if randint(1, 100) > 30 or victim.cash < self._cash or self.level == 0:
             return
 
         victim.cash -= self._cash
@@ -129,7 +133,7 @@ class Evasion(Skill):
 
     @events('player_pre_victim')
     def _on_player_pre_victim(self, victim, info, **eargs):
-        if randint(1, 100) > self._chance:
+        if randint(1, 100) > self._chance or self.level == 0:
             return
 
         send_wcs_saytext_by_index(self._msg_a.format(damage=info.damage), victim.index)
@@ -161,6 +165,9 @@ class DemonicTransformation(Skill):
 
     @events('player_spawn')
     def _on_player_spawn_reset(self, player, **eargs):
+        if self.level == 0:
+            return
+
         color = player.color
         color.a = 255
         player.color = color
@@ -174,6 +181,9 @@ class DemonicTransformation(Skill):
 
     @clientcommands('ultimate')
     def _on_player_ultimate(self, player, **eargs):
+        if self.level == 0:
+            return
+            
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             if self._status:

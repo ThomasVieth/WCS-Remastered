@@ -28,6 +28,7 @@ __all__ = ("CryptLord", )
 ## cryptlord declaration
 
 class CryptLord(Race):
+    image = "https://static.wikia.nocookie.net/wowpedia/images/f/f8/BTNHeroCryptLord-Reforged.png/revision/latest?cb=20191013215959"
 
     @classproperty
     def description(cls):
@@ -57,7 +58,7 @@ class Impale(Skill):
 
     @events('player_attack')
     def _on_player_attack_impale(self, attacker, victim, **kwargs):
-        if randint(1, 100) <= 7 + self.level and not victim.dead:
+        if randint(1, 100) <= 7 + self.level and not victim.dead and self.level > 0:
             victim.base_velocity = Vector(0, 0, 300)
 
             Shake(100, 1.5).send(victim.index)
@@ -97,6 +98,9 @@ class SpikedCarapace(Skill):
 
     @events('player_pre_victim')
     def _on_player_pre_victim(self, attacker, victim, info, **kwargs):
+        if self.level == 0:
+            return
+
         multiplier = 1 - (self.reduction / 100)
         old_damage = info.damage
         info.damage *= multiplier
@@ -105,7 +109,7 @@ class SpikedCarapace(Skill):
 
     @events('player_victim')
     def _on_player_victim(self, attacker, victim, **kwargs):
-        if attacker.dead:
+        if attacker.dead or self.level == 0:
             return
 
         info = TakeDamageInfo()
@@ -137,7 +141,7 @@ class ShadowStrike(Skill):
 
     @events('player_pre_attack')
     def _on_player_pre_attack(self, attacker, victim, info, **kwargs):
-        if randint(0, 101) <= self.chance and not victim.dead:
+        if randint(0, 101) <= self.chance and not victim.dead and self.level > 0:
             info.damage += self.extra_damage
             send_wcs_saytext_by_index(self._msg_a.format(damage=self.extra_damage, name=victim.name), attacker.index)
 
@@ -177,6 +181,9 @@ class LocustSwarm(Skill):
 
     @clientcommands('ultimate')
     def _on_player_ultimate(self, player, **kwargs):
+        if self.level == 0:
+            return
+            
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             enemy_team = 5 - player.team

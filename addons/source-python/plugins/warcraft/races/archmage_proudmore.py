@@ -27,6 +27,7 @@ __all__ = ("ArchmageProudmore", )
 ## archmageproudmore declaration
 
 class ArchmageProudmore(Race):
+    image = "https://i.imgur.com/ZadYz3K.png"
 
     @classproperty
     def description(cls):
@@ -56,6 +57,9 @@ class Earthquake(Skill):
 
     @events('player_attack')
     def _on_player_hurt_shake(self, attacker, victim, **eargs):
+        if self.level == 0:
+            return
+            
         if randint(0, 101) <= self.level * 2:
             Shake(100, 1.5).send(victim.index)
             send_wcs_saytext_by_index(self._msg_a.format(name=victim.name), attacker.index)
@@ -143,14 +147,23 @@ class LiftOff(Skill):
     def health(self):
         return 8 + (self.level * 2)
 
+    _msg_a = '{BLUE}Lift Off!.'
     _msg_c = '{{BLUE}}Lift Off {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
 
     @clientcommands('ultimate')
     def _on_player_ultimate(self, player, **eargs):
+        if self.level == 0:
+            return
+
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
-            player.move_type = MoveType.WALK if player.move_type == MoveType.FLY else MoveType.FLY
-            player.health += self.health
+            if player.move_type == MoveType.FLY:
+                player.move_type = MoveType.WALK
+                player.health -= min(self.health, player.health - 1)
+            else:
+                player.move_type = MoveType.FLY
+                player.health += self.health
+                send_wcs_saytext_by_index(self._msg_a, player.index)
             self.cooldowns['ultimate'] = (7 - self.level)
         else:
             send_wcs_saytext_by_index(self._msg_c.format(time=_cooldown), player.index)

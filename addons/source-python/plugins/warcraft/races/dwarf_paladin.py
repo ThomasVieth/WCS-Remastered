@@ -35,6 +35,7 @@ heal_sound = StreamSound("source-python/warcraft/heal.wav", volume=1, download=T
 stun_sound = StreamSound("source-python/warcraft/hammer.wav", volume=1, download=True)
 
 class DwarfPaladin(Race):
+    image = "https://wowdoc.eu/wp-content/uploads/2017/07/paladin.png"
 
     @classproperty
     def description(cls):
@@ -82,6 +83,9 @@ class Stoneskin(Skill):
 
     @events('player_pre_victim')
     def _on_player_pre_victim(self, attacker, victim, info, **kwargs):
+        if self.level == 0:
+            return
+
         reduction = (6 + (2 * self.level)) / 100
         multiplier = 1 - reduction
         old_damage = info.damage
@@ -110,7 +114,7 @@ class HammerOfJustice(Skill):
 
     @events('player_pre_attack')
     def _on_player_pre_attack(self, attacker, victim, **kwargs):
-        if randint(1, 100) < 10 + self.level and not victim.stuck:
+        if randint(1, 100) < 10 + self.level and not victim.stuck and self.level > 0:
             victim.base_velocity = Vector(0, 0, 400)
             victim.delay(0.8, victim.__setattr__, args=('stuck', True))
             victim.delay(1.8, victim.__setattr__, args=('stuck', False))
@@ -142,7 +146,7 @@ class HolyLight(Skill):
 
     @classproperty
     def description(cls):
-        return 'Heal yourself for a small amount. Max 250HP. Ability.'
+        return 'Heal yourself for a small amount. Max 150HP. Ability.'
 
     @classproperty
     def max_level(cls):
@@ -161,9 +165,12 @@ class HolyLight(Skill):
 
     @clientcommands('ability')
     def _on_player_ability(self, player, **kwargs):
+        if self.level == 0:
+            return
+
         _cooldown = self.cooldowns['ability']
         if _cooldown <= 0:
-            player.health = min(player.health + self.health, 250)
+            player.health = min(player.health + self.health, 150)
             send_wcs_saytext_by_index(self._msg_a.format(amount=self.health), player.index)
 
             location = player.origin
@@ -224,6 +231,9 @@ class DivineShield(Skill):
 
     @clientcommands('ultimate')
     def _on_player_ultimate(self, player, **eargs):
+        if self.level == 0:
+            return
+            
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             duration = (self.level * 0.5) + 1
@@ -247,6 +257,6 @@ class DivineShield(Skill):
             godmode_sound.origin = player.origin
             godmode_sound.play()
 
-            self.cooldowns['ultimate'] = 20
+            self.cooldowns['ultimate'] = 30
         else:
             send_wcs_saytext_by_index(self._msg_c.format(time=_cooldown), player.index)

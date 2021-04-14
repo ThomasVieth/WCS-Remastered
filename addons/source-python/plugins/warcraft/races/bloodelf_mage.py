@@ -43,6 +43,7 @@ ice_sound = StreamSound('source-python/wcgo/icehit.mp3', download=True)
 rain_material = Model('particle/rain.vmt', True)
 
 class BloodElfArchmage(Race):
+    image = "https://cdn.worldofwargraphs.com/img/bloodelf.png"
 
     @classproperty
     def description(cls):
@@ -84,6 +85,9 @@ class Phoenix(Skill):
 
     @events('any_death')
     def _on_any_death(self, player, **kwargs):
+        if self.level == 0:
+            return
+
         if self._should_respawn and player.team == self.parent.parent.team:
             send_wcs_saytext_by_index(self._msg_a, player.index)
             Delay(1, player.spawn)
@@ -109,6 +113,9 @@ class ArcaneBrilliance(Skill):
 
     @events('player_spawn')
     def _on_player_spawn(self, player, **kwargs):
+        if self.level == 0:
+            return
+
         for ally in PlayerIter():
             if ally.team == player.team:
                 ally.cash = int(ally.cash * self.multiplier)
@@ -164,6 +171,9 @@ class IceBarrier(Skill):
 
     @events('player_pre_victim')
     def _on_player_pre_victim(self, victim, info, **kwargs):
+        if self.level == 0:
+            return
+
         if self._absorb >= info.damage:
             self._absorb -= info.damage
             info.damage = 0
@@ -180,6 +190,9 @@ class IceBarrier(Skill):
 
     @clientcommands('ability')
     def _on_player_ability(self, player, **kwargs):
+        if self.level == 0:
+            return
+
         _cooldown = self.cooldowns['ability']
         if _cooldown <= 0:
             self._absorb += self.shield
@@ -289,7 +302,7 @@ class Blizzard(Skill):
 
     @events('player_pre_attack')
     def _on_player_pre_attack(self, attacker, victim, **kwargs):
-        if randint(1, 100) > 20 or self.cooldowns['blizzard'] > 0:
+        if randint(1, 100) > 20 or self.cooldowns['blizzard'] > 0 or self.level == 0:
             return
 
         self._center = victim.origin
@@ -385,6 +398,9 @@ class CuringRitual(Skill):
 
     @clientcommands('ultimate')
     def _on_player_ultimate(self, player, **eargs):
+        if self.level == 0:
+            return
+            
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             if player.cash >= 100:
