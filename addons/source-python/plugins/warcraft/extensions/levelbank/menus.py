@@ -42,8 +42,8 @@ def _on_levelbank_menu_build(menu, index):
             PagedOption(
                 f"{option} Levels",
                 (player_levelbank, option),
-                highlight=player_levelbank.levels > option,
-                selectable=player_levelbank.levels > option
+                highlight=player_levelbank.levels >= option,
+                selectable=player_levelbank.levels >= option
             )
         )
 
