@@ -78,6 +78,9 @@ class TeleportSkill(Skill):
 
     @clientcommands('ultimate')
     def _on_player_use_ultimate(self, player, **eargs):
+        if self.level == 0:
+            return
+            
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             view_vector = player.view_vector
