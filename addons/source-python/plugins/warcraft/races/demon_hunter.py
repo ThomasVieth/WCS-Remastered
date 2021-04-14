@@ -39,17 +39,17 @@ class DemonHunter(Race):
     def max_level(cls):
         return 99
 
+    @classproperty
+    def requirement_sort_key(cls):
+        return 14
+
     @classmethod
     def is_available(cls, player):
-        return player.total_level > 100
+        return player.total_level > 160
 
     @classproperty
     def requirement_string(cls):
-        return "Total Level 100"
-
-    @classproperty
-    def requirement_sort_key(cls):
-        return 101
+        return "Total Level 160"
 
 @DemonHunter.add_skill
 class DoubleJump(Skill):
@@ -163,7 +163,7 @@ class DemonicTransformation(Skill):
 
     _msg_c = '{{RED}}Demonic Tranformation {{PALE_GREEN}}is on cooldown {{PALE_GREEN}}for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
 
-    @events('player_spawn')
+    @events('player_spawn', 'player_suicide')
     def _on_player_spawn_reset(self, player, **eargs):
         if self.level == 0:
             return
@@ -183,7 +183,7 @@ class DemonicTransformation(Skill):
     def _on_player_ultimate(self, player, **eargs):
         if self.level == 0:
             return
-            
+
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             if self._status:

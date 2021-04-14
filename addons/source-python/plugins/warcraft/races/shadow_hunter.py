@@ -46,6 +46,14 @@ class ShadowHunter(Race):
     def requirement_sort_key(cls):
         return 7
 
+    @classmethod
+    def is_available(cls, player):
+        return player.total_level > 60
+
+    @classproperty
+    def requirement_string(cls):
+        return "Total Level 60"
+
 
 @ShadowHunter.add_skill
 class HealingWave(Skill):

@@ -42,7 +42,15 @@ class FlamePredator(Race):
 
     @classproperty
     def requirement_sort_key(cls):
-        return 11
+        return 10
+
+    @classmethod
+    def is_available(cls, player):
+        return player.total_level > 90
+
+    @classproperty
+    def requirement_string(cls):
+        return "Total Level 90"
 
     @events('player_spawn')
     def player_spawn(self, player, **kwargs):

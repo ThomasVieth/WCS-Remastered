@@ -57,6 +57,15 @@ class BloodElfArchmage(Race):
     def requirement_sort_key(cls):
         return 5
 
+    @classmethod
+    def is_available(cls, player):
+        return player.total_level > 40
+
+    @classproperty
+    def requirement_string(cls):
+        return "Total Level 40"
+        
+
 @BloodElfArchmage.add_skill
 class Phoenix(Skill):
 

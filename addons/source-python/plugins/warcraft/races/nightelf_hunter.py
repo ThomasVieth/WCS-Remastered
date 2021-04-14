@@ -52,17 +52,17 @@ class NightElfHunter(Race):
     def max_level(cls):
         return 99
 
+    @classproperty
+    def requirement_sort_key(cls):
+        return 12
+
     @classmethod
     def is_available(cls, player):
-        return player.total_level > 100
+        return player.total_level > 120
 
     @classproperty
     def requirement_string(cls):
-        return "Total Level 100"
-
-    @classproperty
-    def requirement_sort_key(cls):
-        return 100
+        return "Total Level 120"
 
 @NightElfHunter.add_skill
 class Shadowmeld(Skill):

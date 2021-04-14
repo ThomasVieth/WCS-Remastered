@@ -41,6 +41,14 @@ class ArchmageProudmore(Race):
     def requirement_sort_key(cls):
         return 6
 
+    @classmethod
+    def is_available(cls, player):
+        return player.total_level > 50
+
+    @classproperty
+    def requirement_string(cls):
+        return "Total Level 50"
+
 
 @ArchmageProudmore.add_skill
 class Earthquake(Skill):

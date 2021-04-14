@@ -50,7 +50,15 @@ class Warden(Race):
 
     @classproperty
     def requirement_sort_key(cls):
-        return 9
+        return 8
+
+    @classmethod
+    def is_available(cls, player):
+        return player.total_level > 70
+
+    @classproperty
+    def requirement_string(cls):
+        return "Total Level 70"
 
 
 @Warden.add_skill

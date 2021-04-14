@@ -40,7 +40,15 @@ class CryptLord(Race):
 
     @classproperty
     def requirement_sort_key(cls):
-        return 8
+        return 9
+
+    @classmethod
+    def is_available(cls, player):
+        return player.total_level > 80
+
+    @classproperty
+    def requirement_string(cls):
+        return "Total Level 80"
 
 
 @CryptLord.add_skill

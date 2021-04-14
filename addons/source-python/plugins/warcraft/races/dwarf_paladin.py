@@ -45,17 +45,17 @@ class DwarfPaladin(Race):
     def max_level(cls):
         return 99
 
+    @classproperty
+    def requirement_sort_key(cls):
+        return 13
+
     @classmethod
     def is_available(cls, player):
-        return player.total_level > 100
+        return player.total_level > 140
 
     @classproperty
     def requirement_string(cls):
-        return "Total Level 100"
-
-    @classproperty
-    def requirement_sort_key(cls):
-        return 102
+        return "Total Level 140"
 
 
 @DwarfPaladin.add_skill
