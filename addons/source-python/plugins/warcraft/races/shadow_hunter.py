@@ -32,6 +32,7 @@ __all__ = ("ShadowHunter", )
 godmode_sound = StreamSound("source-python/warcraft/divine_shield.wav", volume=1, download=True)
 
 class ShadowHunter(Race):
+    image = "https://static.wikia.nocookie.net/wowpedia/images/8/86/BTNShadowHunter-Reforged.png"
 
     @classproperty
     def description(cls):
@@ -89,11 +90,17 @@ class HealingWave(Skill):
 
     @events('player_spawn')
     def _on_player_spawn(self, player, **kwargs):
+        if self.level == 0:
+            return
+
         self.repeater.start(self.duration)
         send_wcs_saytext_by_index(self._msg_a.format(health=self.health, duration=self.duration), player.index)
 
     @events('player_death')
     def _on_player_death(self, player, **kwargs):
+        if self.level == 0:
+            return
+
         self.repeater.stop()
 
 
@@ -116,7 +123,7 @@ class Hex(Skill):
 
     @events('player_attack')
     def _on_player_attack(self, attacker, victim, **kwargs):
-        if victim.dead or victim.is_slowed or randint(0, 101) > 10:
+        if victim.dead or victim.is_slowed or randint(0, 101) > 10 or self.level == 0:
             return
 
         current_speed = victim.speed
@@ -166,7 +173,7 @@ class SerpentWard(Skill):
 
     @property
     def damage(self):
-        return 1 + self.level
+        return 8 + self.level
 
     @property
     def duration(self):
@@ -213,6 +220,9 @@ class SerpentWard(Skill):
 
     @clientcommands('ability')
     def _on_ability(self, player, **kwargs):
+        if self.level == 0:
+            return
+
         if len(self._wards) > 1:
             send_wcs_saytext_by_index(self._msg_f, player.index)
             return
@@ -228,6 +238,9 @@ class SerpentWard(Skill):
 
     @events('player_death', 'round_end')
     def _on_player_death(self, **kwargs):
+        if self.level == 0:
+            return
+
         self._repeater.stop()
         self._wards.clear()
 
@@ -277,6 +290,9 @@ class BidBadVoodoo(Skill):
 
     @clientcommands('ultimate')
     def _on_player_ultimate(self, player, **kwargs):
+        if self.level == 0:
+            return
+            
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             self._godmode = True

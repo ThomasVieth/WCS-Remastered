@@ -35,6 +35,7 @@ chain_sound = StreamSound('source-python/warcraft/chain_lightning.wav', download
 root_sound = StreamSound('source-python/warcraft/root.mp3', download=True)
 
 class OrcishHorde(Race):
+    image = "https://liquipedia.net/commons/images/thumb/7/76/Orcrace.png/200px-Orcrace.png"
     
     @classproperty
     def description(cls):
@@ -88,6 +89,9 @@ class BloodFury(Skill):
 
     @events('player_pre_attack')
     def _on_player_pre_attack(self, attacker, victim, info, **kwargs):
+        if self.level == 0:
+            return
+
         if self.can_crit:
             info.damage *= 1 + 0.2 * self.level
             send_wcs_saytext_by_index(self._msg_a.format(name=victim.name), attacker.index)
@@ -136,6 +140,9 @@ class EarthgrabTotem(Skill):
 
     @events('player_pre_attack')
     def _on_player_pre_attack(self, attacker, victim, **kwargs):
+        if self.level == 0:
+            return
+            
         if randint(1, 100) <= 16 + self.level and not victim.stuck:
             victim.stuck = True
             victim.delay(1.5, victim.__setattr__, args=('stuck', False))
@@ -183,6 +190,9 @@ class Reincarnation(Skill):
 
     @events('player_death')
     def _on_death_respawn(self, player, **kwargs):
+        if self.level == 0:
+            return
+            
         if randint(1, 101) <= 25 + self.level:
             player.delay(1.5, player.spawn)
             player.delay(2, self._force_drop_weapons, args=(player, ))
@@ -249,6 +259,9 @@ class ChainLightning(Skill):
 
     @clientcommands('ultimate')
     def _on_player_ultimate(self, player, **kwargs):
+        if self.level == 0:
+            return
+            
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             last_target = player

@@ -42,6 +42,7 @@ poison_sound = StreamSound('source-python/warcraft/poison.wav', download=True)
 teleport_sound = StreamSound('source-python/warcraft/timeleap.mp3', download=True)
 
 class NightElfHunter(Race):
+    image = "https://cdn.discordapp.com/attachments/829011612631302204/831968757571911750/latest.png"
     
     @classproperty
     def description(cls):
@@ -91,6 +92,9 @@ class Shadowmeld(Skill):
 
     @events('player_suicide', 'player_death', 'player_spawn')
     def _on_player_death(self, player, **eargs):
+        if self.level == 0:
+            return
+
         color = player.color
         color.a = 255
         player.color = color
@@ -154,11 +158,17 @@ class HuntersMark(Skill):
 
     @events('player_pre_attack')
     def _on_player_pre_attack(self, attacker, victim, info, **eargs):
+        if self.level == 0:
+            return
+
         if self.target and self.target.userid == victim.userid:
             info.damage *= self.multiplier
 
     @events('player_kill')
     def _on_player_kill(self, player, victim, **eargs):
+        if self.level == 0:
+            return
+
         if self.target and self.target.index == victim.index:
             if self.effect:
                 self.effect.call_input('Kill')
@@ -167,6 +177,9 @@ class HuntersMark(Skill):
 
     @clientcommands('ability')
     def _on_player_ability(self, player, **eargs):
+        if self.level == 0:
+            return
+
         cooldown = self.cooldowns["ability"]
         if cooldown <= 0:
             targets = []
@@ -248,7 +261,7 @@ class SerpentSting(Skill):
 
     @events('player_attack')
     def _on_player_attack(self, attacker, victim, **eargs):
-        if randint(1, 100) > self.poison_chance or victim.userid in self.poisoned:
+        if randint(1, 100) > self.poison_chance or victim.userid in self.poisoned or self.level == 0:
             return
             
         self.poisoned.add(victim.userid)
@@ -331,6 +344,9 @@ class WispSpirit(Skill):
 
     @clientcommands('ultimate')
     def _on_player_ultimate(self, player, **kwargs):
+        if self.level == 0:
+            return
+            
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             origin = player.eye_location

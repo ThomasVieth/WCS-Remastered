@@ -28,7 +28,8 @@ __all__ = ("UndeadScourge", )
 ## undeadscourge declaration
 
 class UndeadScourge(Race):
-    laser = Model("sprites/lgtning.vmt", True)  
+    image = "https://static.wikia.nocookie.net/moon-guard/images/3/3b/Scourge_Crest_png.png/revision/latest/scale-to-width-down/340?cb=20190920022627"
+    laser = Model("sprites/lgtning.vmt", True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

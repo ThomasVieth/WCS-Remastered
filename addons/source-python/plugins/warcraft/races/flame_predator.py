@@ -18,6 +18,10 @@ from warcraft.registration import events
 from warcraft.skill import Skill
 from warcraft.utility import classproperty
 
+## warcraft.skills imports
+
+from .skills.self_reduce_gravity import ReduceGravitySkill
+
 ## __all__ declaration
 
 __all__ = ("FlamePredator", )
@@ -46,7 +50,7 @@ class FlamePredator(Race):
         for weapon in player.weapons(not_filters='knife'):
             player.drop_weapon(weapon.pointer, None, None)
 
-    @events('player_death')
+    @events('player_death', 'player_suicide')
     def player_death(self, player, **kwargs):
         player.unrestrict_weapons(*_knifeonly)
 
@@ -63,6 +67,9 @@ class Berserk(Skill):
 
     @events('player_spawn')
     def _on_player_spawn(self, player, **eargs):
+        if self.level == 0:
+            return
+
         player.health += 10 * self.level
         player.speed = 1.4 + (0.05 * self.level)
 
@@ -71,39 +78,54 @@ class CloakOfInvisibility(Skill):
     
     @classproperty
     def description(cls):
-        return 'Put on your cloak to be 20-90% invisible.'
+        return 'Put on your cloak to be 20-68% invisible.'
 
     @classproperty
     def max_level(cls):
         return 8
 
-    @events('player_spawn', 'player_upgrade_skill')
-    def _on_player_spawn_give_invis(self, player, **eargs):
+    @events('player_death', 'player_suicide')
+    def _on_player_death_remove_invis(self, player, **kwargs):
+        if self.level == 0:
+            return
+
         color = player.color
-        color.a = 255 - (30 * self.level)
+        color.a = 255
+        player.color = color
+
+    @events('player_spawn')
+    def _on_player_spawn_give_invis(self, player, **eargs):
+        if self.level == 0:
+            return
+
+        color = player.color
+        color.a = int(255 * ((20 + (self.level * 6)) / 100))
         player.color = color
 
 @FlamePredator.add_skill
-class Levitation(Skill):
+class Levitation(ReduceGravitySkill):
 
     @classproperty
     def description(cls):
-        return 'Reduce your current gravity and damage taken when jumping.'
+        return "Reduce your current gravity and damage taken when jumping."
 
     @classproperty
     def max_level(cls):
         return 8
 
-    _msg_a = '{{PALE_GREEN}}Reduced {{DULL_RED}}damage taken {{PALE_GREEN}}from {{RED}}{name}.'
+    @property
+    def reduction(self):
+        return 0.06 * self.level
 
-    @events('player_spawn')
-    def _on_player_spawn(self, player, **eargs):
-        player.gravity = 1 - (0.08 * self.level)
+    _msg_a = '{{PALE_GREEN}}Reduced {{DULL_RED}}damage taken {{PALE_GREEN}}from {{RED}}{name}.'
 
     @events('player_pre_victim')
     def _on_player_pre_victim(self, attacker, victim, info, **eargs):
+        if self.level == 0:
+            return
+
         if victim.ground_entity == -1:
-            info.damage *= 1 - (0.06 * self.level)
+            info.damage *= 1 - 0.06 * self.level
             send_wcs_saytext_by_index(self._msg_a.format(name=attacker.name), victim.index)
             ricochet = TempEntity('Armor Ricochet', position=victim.origin)
             ricochet.create()
@@ -124,7 +146,7 @@ class ClawAttack(Skill):
 
     @events('player_attack')
     def _on_player_attack(self, player, victim, **eargs):
-        if randint(1, 100) > (45 + (2 * self.level)):
+        if randint(0, 101) > (45 + (2 * self.level)) or self.level == 0:
             return
 
         victim.drop_weapon(victim.active_weapon.pointer, None, None)
@@ -148,7 +170,7 @@ class BurningBlade(Skill):
 
     @events('player_attack')
     def _on_player_attack(self, player, victim, **eargs):
-        if randint(1, 100) > 30:
+        if randint(0, 101) > 30 or self.level == 0:
             return
 
         victim.ignite_lifetime(self.level)

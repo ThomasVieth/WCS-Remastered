@@ -32,6 +32,7 @@ __all__ = ("NightElves", )
 root_sound = StreamSound('source-python/warcraft/root.mp3', download=True)
 
 class NightElves(Race):
+    image = "https://liquipedia.net/commons/images/thumb/1/16/Nelfrace.png/240px-Nelfrace.png"
     
     @classproperty
     def description(cls):
@@ -64,7 +65,7 @@ class EvasionAura(Skill):
 
     @events('player_pre_victim')
     def _on_player_pre_victim(self, victim, info, **eargs):
-        if randint(1, 100) > self._chance:
+        if randint(1, 100) > self._chance or self.level == 0:
             return
 
         send_wcs_saytext_by_index(self._msg_a.format(damage=info.damage), victim.index)
@@ -90,7 +91,7 @@ class ThornsAura(Skill):
 
     @events('player_victim')
     def _on_player_victim(self, attacker, victim, **kwargs):
-        if attacker.dead or randint(0, 101) > (self.level * 2):
+        if attacker.dead or randint(0, 101) > (self.level * 2) or self.level == 0:
             return
 
         info = TakeDamageInfo()
@@ -115,7 +116,7 @@ class TrueshotAura(Skill):
 
     @events('player_pre_attack')
     def _on_player_pre_attack(self, attacker, victim, info, **kwargs):
-        if victim.dead or randint(0, 101) > (self.level + 7):
+        if victim.dead or randint(0, 101) > (self.level + 7) or self.level == 0:
             return
 
         extra_damage = (5 + (self.level * 2))
@@ -175,6 +176,9 @@ class EntanglingRoots(Skill):
 
     @clientcommands('ultimate')
     def _on_player_ultimate(self, player, **kwargs):
+        if self.level == 0:
+            return
+            
         _cooldown = self.cooldowns['ultimate']
         if _cooldown <= 0:
             last_target = player

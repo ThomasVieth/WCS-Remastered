@@ -16,6 +16,7 @@ from engines.trace import Ray
 from engines.trace import TraceFilterSimple
 from filters.players import PlayerIter
 from messages import Shake
+from paths import CUSTOM_DATA_PATH
 
 ## warcraft.package imports
 
@@ -40,6 +41,7 @@ __all__ = ("HumanAlliance", )
 ## HumanAlliance declaration
 
 class HumanAlliance(Race):
+    image = "https://liquipedia.net/commons/images/thumb/2/2c/Humanrace.png/240px-Humanrace.png"
 
     @classproperty
     def description(cls):

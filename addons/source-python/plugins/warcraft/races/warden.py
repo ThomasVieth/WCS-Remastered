@@ -38,6 +38,7 @@ poison_sound = StreamSound('source-python/warcraft/poison.wav', download=True)
 redflare_material = Model('Effects/Redflare.vmt', True)
 
 class Warden(Race):
+    image = "https://wow.zamimg.com/modelviewer/live/webthumbs/npc/213/76245.png"
 
     @classproperty
     def description(cls):
@@ -54,7 +55,7 @@ class Warden(Race):
 
 @Warden.add_skill
 class FanOfKnives(Skill):
-    _msg_a = "{ORANGE}Fan of Knives {DULL_RED}damaged {RED}enemies {PALE_GREEN}in an {BLUE}AoE {PALE_GREEN}of your {RED}target."
+    _msg_a = "{ORANGE}Fan of Knives {DULL_RED}damaged {RED}enemies {PALE_GREEN}in an {BLUE}AoE {PALE_GREEN}around {RED}you."
 
     @classproperty
     def description(cls):
@@ -70,7 +71,7 @@ class FanOfKnives(Skill):
 
     @property
     def damage(self):
-        return randint(8, 20)
+        return randint(16, 38)
 
     @property
     def range(self):
@@ -126,7 +127,7 @@ class Resistance(Skill):
             send_wcs_saytext_by_index(self._msg_a, player.index)
 
     @events('player_death', 'player_suicide')
-    def _on_player_spawn(self, player, **kwargs):
+    def _on_player_death(self, player, **kwargs):
         player.ultimate_immune = False
 
 
@@ -152,7 +153,7 @@ class ShadowStrike(Skill):
 
     @property
     def poison_damage(self):
-        return 1 + (self.level / 2)
+        return 2 + (self.level / 2)
 
     @property
     def poison_chance(self):
