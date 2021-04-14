@@ -19,6 +19,7 @@ from weapons.manager import weapon_manager
 ## warcraft.package imports
 
 from warcraft.commands.messages import send_wcs_saytext_by_index
+from warcraft.players import player_dict
 from warcraft.race import Race
 from warcraft.registration import events, clientcommands
 from warcraft.skill import Skill
@@ -217,23 +218,26 @@ class ChainLightning(Skill):
     _msg_c = '{{GREEN}}Chain Lightning {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
     _msg_f = '{GREEN}Chain Lightning {PALE_GREEN}found {DULL_RED}no enemies{PALE_GREEN}!'
 
-    def _find_closest_player(self, player, team, length=99999, exclusions=[]):
+    def _find_closest_player(self, player, team_index, length=99999, exclusions=[]):
         _target = None
-        for target in PlayerIter(is_filters='alive', not_filters=team):
+        for target in player_dict.values():
+            if target.dead or target.team_index == team_index or target in exclusions or target.ultimate_immune:
+                continue
+
             _distance = player.origin.get_distance(target.origin)
-            if _distance < length and not target in exclusions:
+            if _distance < length:
                 _target = target
                 length = _distance
         return _target
 
     def _find_chain_players(self, player, length, count):
         _last_target = player
-        team = ['t', 'ct'][player.team-2]
+        team_index = player.team_index
         _targets = []
         while count > 0:
             if not _last_target:
                 break
-            _target = self._find_closest_player(_last_target, team, length, _targets)
+            _target = self._find_closest_player(_last_target, team_index, length, _targets)
             _targets.append(_target)
             _last_target = _target
             count -= 1

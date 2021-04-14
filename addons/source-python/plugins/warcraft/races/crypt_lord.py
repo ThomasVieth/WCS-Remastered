@@ -181,7 +181,7 @@ class LocustSwarm(Skill):
         if _cooldown <= 0:
             enemy_team = 5 - player.team
             all_players = player_dict.values()
-            possible_players = list(filter(lambda x: x.team == enemy_team and not x.dead, all_players))
+            possible_players = list(filter(lambda x: x.team == enemy_team and not x.ultimate_immune and not x.dead, all_players))
             if len(possible_players) > 0:
                 target = choice(possible_players)
                 target.armor -= self.armour

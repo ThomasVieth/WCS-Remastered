@@ -10,6 +10,7 @@ from random import randint
 ## source.python imports
 
 from colors import Color
+from effects.base import TempEntity
 from engines.precache import Model
 from engines.sound import StreamSound
 from entities.constants import RenderMode
@@ -72,10 +73,6 @@ class FanOfKnives(Skill):
         return randint(8, 20)
 
     @property
-    def fov(self):
-        return 100
-
-    @property
     def range(self):
         return 225
 
@@ -95,21 +92,42 @@ class FanOfKnives(Skill):
 
                 v2 = target.origin
 
-                angle_radians = atan2(v2.y - v1.y, v2.x - v1.x)
-                angle_degrees = degrees(angle_radians)
-                angle_diff = attacker.view_angle.y - angle_degrees
-                if angle_diff > 180:
-                    angle_diff -= 360
-
-                if (angle_diff < (self.fov / 2)
-                    and angle_diff > -(self.fov / 2)
-                    and v1.get_distance(v2) < self.range):
-                    
+                if v1.get_distance(v2) < self.range:
+                    ricochet = TempEntity('Armor Ricochet', position=victim.origin)
+                    ricochet.create()
                     target.take_damage(self.damage, attacker_index=attacker.index, weapon_index=index, skip_hooks=True)
                     damaged = True
 
             if damaged:
                 send_wcs_saytext_by_index(self._msg_a, attacker.index)
+
+
+@Warden.add_skill
+class Resistance(Skill):
+
+    @classproperty
+    def description(cls):
+        return 'Gives you immunity to ultimates. 20-100% chance on spawn.'
+
+    @classproperty
+    def max_level(cls):
+        return 8
+
+    _msg_a = '{DARK_BLUE}Resistance {PALE_GREEN}provides {BLUE}you {ORANGE}ultimate immunity{PALE_GREEN}.'
+
+    @property
+    def chance(self):
+        return 20 + (10 * self.level)
+
+    @events('player_spawn')
+    def _on_player_spawn(self, player, **kwargs):
+        if randint(0, 101) < self.chance:
+            player.ultimate_immune = True
+            send_wcs_saytext_by_index(self._msg_a, player.index)
+
+    @events('player_death', 'player_suicide')
+    def _on_player_spawn(self, player, **kwargs):
+        player.ultimate_immune = False
 
 
 @Warden.add_skill

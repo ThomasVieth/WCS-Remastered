@@ -70,6 +70,7 @@ class Player(SPPlayer):
 		self.call_events_when_dead = False
 
 		self.is_slowed = False
+		self.ultimate_immune = False
 
 	def create_user_data(self):
 		"""

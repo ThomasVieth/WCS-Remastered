@@ -17,6 +17,7 @@ from filters.players import PlayerIter
 ## warcraft.package imports
 
 from warcraft.commands.messages import send_wcs_saytext_by_index
+from warcraft.players import player_dict
 from warcraft.race import Race
 from warcraft.registration import events, clientcommands
 from warcraft.skill import Skill
@@ -159,8 +160,10 @@ class EntanglingRoots(Skill):
 
     def _find_players_within(self, player, length=99999, exclusions=[]):
         targets = []
-        team = 't' if player.team == 2 else 'ct'
-        for target in PlayerIter(is_filters='alive', not_filters=team):
+        for target in player_dict.values():
+            if target.dead or target.team == player.team or target in exclusions or target.ultimate_immune:
+                continue
+
             distance = player.origin.get_distance(target.origin)
             if distance < length:
                 targets.append(target)
