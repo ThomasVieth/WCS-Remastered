@@ -18,6 +18,10 @@ from ..translations import categories_strings, shop_menu_strings
 
 __all__ = ("shop_menu", )
 
+## globals
+
+shop_category_dict = dict()
+
 ## callback declarations
 
 def _on_shop_build(menu, index):
@@ -35,16 +39,18 @@ def _on_shop_build(menu, index):
 def _on_shop_select(menu, index, choice):
     player = player_dict[index]
     category = choice.value
+    shop_category_dict[index] = category
+    return item_menu
+
+def _on_items_build(menu, index):
+    player = player_dict[index]
+    category = shop_category_dict[index]
     items = Item.list_items_in_category(category)
-    item_menu = PagedMenu(
-        title=category,
-        description=shop_menu_strings['description'],
-        select_callback=_on_items_select,
-        parent_menu=menu,
-    )
+    menu.clear()
+    menu.title = category
     for item_cls in items:
         selectable = item_cls.is_available(player)
-        item_menu.append(
+        menu.append(
             PagedOption(
                 item_cls.name + " ({})".format(item_cls.requirement_string),
                 item_cls,
@@ -52,7 +58,6 @@ def _on_shop_select(menu, index, choice):
                 highlight=selectable
             )
         )
-    return item_menu
 
 def _on_items_select(menu, index, choice):
     player = player_dict[index]
@@ -73,4 +78,11 @@ shop_menu = PagedMenu(
     build_callback=_on_shop_build,
     select_callback=_on_shop_select,
     parent_menu=main_menu,
+)
+
+item_menu = PagedMenu(
+    description=shop_menu_strings['description'],
+    build_callback=_on_items_build,
+    select_callback=_on_items_select,
+    parent_menu=shop_menu,
 )
