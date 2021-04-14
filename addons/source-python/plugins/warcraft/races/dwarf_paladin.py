@@ -111,7 +111,7 @@ class HammerOfJustice(Skill):
     @events('player_pre_attack')
     def _on_player_pre_attack(self, attacker, victim, **kwargs):
         if randint(1, 100) < 10 + self.level and not victim.stuck:
-            victim.base_velocity = Vector(0, 0, 300)
+            victim.base_velocity = Vector(0, 0, 400)
             victim.delay(0.8, victim.__setattr__, args=('stuck', True))
             victim.delay(1.8, victim.__setattr__, args=('stuck', False))
 
