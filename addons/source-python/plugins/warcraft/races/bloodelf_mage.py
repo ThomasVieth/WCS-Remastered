@@ -158,6 +158,10 @@ class IceBarrier(Skill):
         self._effect = None
         self._absorb = 0
 
+    @events('player_death', 'player_suicide')
+    def _on_player_death(self, player, **kwargs):
+        player.color = Color(255, 255, 255)
+
     @events('player_pre_victim')
     def _on_player_pre_victim(self, victim, info, **kwargs):
         if self._absorb >= info.damage:
