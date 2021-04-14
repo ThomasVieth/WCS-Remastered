@@ -172,18 +172,19 @@ class Player(SPPlayer):
 		self.update_race_data() ## save current race data
 		race_data = self.get_race_data(race_cls) ## gather new race data
 		self.client_command("kill", True) ## kill the user between race changes
-		new_race = self.init_race_from_data(race_cls, race_data) ## build new race object
-		call_event(
-			"race_change",
-			[],
-			{
-				"player": self,
-				"old_race": self.race,
-				"new_race": new_race
-			}
-		) ## call race_change event
-		self.race = new_race ## assign new race to player
-		self.update_user_data() ## update database to represent race change
+		if self.dead:
+			new_race = self.init_race_from_data(race_cls, race_data) ## build new race object
+			call_event(
+				"race_change",
+				[],
+				{
+					"player": self,
+					"old_race": self.race,
+					"new_race": new_race
+				}
+			) ## call race_change event
+			self.race = new_race ## assign new race to player
+			self.update_user_data() ## update database to represent race change
 
 	@property
 	def total_level(self):
