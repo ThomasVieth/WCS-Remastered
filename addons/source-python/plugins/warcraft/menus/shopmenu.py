@@ -27,7 +27,7 @@ shop_category_dict = dict()
 def _on_shop_build(menu, index):
     menu.clear()
     menu.description = categories_strings['description']
-    for category in Item.categories:
+    for category in sorted(Item.categories):
         menu.append(
             PagedOption(
                 category,

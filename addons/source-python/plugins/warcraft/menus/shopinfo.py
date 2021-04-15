@@ -29,7 +29,7 @@ __all__ = ("shop_info_menu", )
 def _on_shopinfo_build(menu, index):
     menu.clear()
     menu.description = categories_strings['description']
-    for category in Item.categories:
+    for category in sorted(Item.categories):
         menu.append(
             PagedOption(
                 category,
