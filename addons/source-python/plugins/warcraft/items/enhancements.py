@@ -5,8 +5,10 @@
 ## source.python imports
 
 from entities.constants import MoveType
+from entities.entity import Entity
 from listeners.tick import Delay
 from mathlib import Vector
+from messages import SayText2
 from players.constants import PlayerButtons
 
 ## warcraft.package imports
@@ -21,9 +23,10 @@ from warcraft.utility import classproperty
 __all__ = (
     "BootsOfSpeed",
     "GryphonFeather",
-    "LeaperPotion",
+    "Longjump",
     "CloakOfShadows",
-    "HeartOfThePhoenix"
+    "AnkhOfReincarnation",
+    "ScrollOfRespawning"
 )
 
 ## bootsofspeed declaration
@@ -58,7 +61,7 @@ class BootsOfSpeed(Item):
     def _on_player_spawn(self, player, **kwargs):
         player.speed += 0.25
 
-    @events('player_death')
+    @events('player_death', 'player_suicide')
     def _on_player_death(self, player, **kwargs):
         ## remove the item
         player.items.remove(self)
@@ -124,14 +127,14 @@ class GryphonFeather(Item):
     def _on_player_spawn(self, player, **kwargs):
         Delay(0.5, self.reduce_gravity, args=(player, self.reduction))
 
-    @events('player_death')
+    @events('player_death', 'player_suicide')
     def _on_player_death(self, player, **kwargs):
         ## remove the item
         player.items.remove(self)
 
-## leaperpotion declaration
+## longjump declaration
 
-class LeaperPotion(Item):
+class Longjump(Item):
     category = "Enhancements"
     cost = 3000
     description = "Increases the length of your jumps."
@@ -165,7 +168,7 @@ class LeaperPotion(Item):
         velocity.z = 10
         player.base_velocity = velocity
 
-    @events('player_death')
+    @events('player_death', 'player_suicide')
     def _on_player_death(self, player, **kwargs):
         ## remove the item
         player.items.remove(self)
@@ -196,24 +199,105 @@ class CloakOfShadows(Item):
         super().on_purchase(player)
         player.cash -= self.cost
         color = player.color
-        color.a = (255 * 0.3)
+        color.a = int(255 * 0.3)
         player.color = color
         send_wcs_saytext_by_index(self._msg_purchase, player.index)
 
     @events('player_spawn')
     def _on_player_spawn(self, player, **kwargs):
         color = player.color
-        color.a = (255 * 0.3)
+        color.a = int(255 * 0.3)
         player.color = color
 
-    @events('player_death')
+    @events('player_death', 'player_suicide')
     def _on_player_death(self, player, **kwargs):
+        color = player.color
+        color.a = 255
+        player.color = color
         ## remove the item
         player.items.remove(self)
 
-## heartofthephoenix declaration
+## secondaryclipenhancer declaration
 
-class HeartOfThePhoenix(Item):
+class SecondaryClipEnhancer(Item):
+    category = "Enhancements"
+    cost = 400
+    description = "Gives you a 50 bullet clip for your secondary weapon."
+
+    _msg_purchase = '{GREEN}Purchased {BLUE}Secondary Clip Enhancer.'
+
+    @classmethod
+    def is_available(cls, player):
+        item_count = sum(isinstance(item, cls) for item in player.items)
+        return player.cash >= cls.cost and item_count < 1
+
+    @classproperty
+    def requirement_string(cls):
+        return "${}".format(cls.cost)
+
+    @classproperty
+    def requirement_sort_key(cls):
+        return cls.cost
+
+    def on_purchase(self, player):
+        super().on_purchase(player)
+        player.secondary.clip = 50
+        player.items.remove(self)
+
+## ankhofreincarnation declaration
+
+class AnkhOfReincarnation(Item):
+    category = "Enhancements"
+    cost = 2000
+    description = "Weapons are saved upon death and given to you on spawn."
+
+    _msg_purchase = '{GREEN}Purchased {BLUE}Ankh of Reincarnation.'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.weapons = []
+
+    @classmethod
+    def is_available(cls, player):
+        item_count = sum(isinstance(item, cls) for item in player.items)
+        return player.cash >= cls.cost and not player.dead and item_count < 1
+
+    @classproperty
+    def requirement_string(cls):
+        return "${}".format(cls.cost)
+
+    @classproperty
+    def requirement_sort_key(cls):
+        return cls.cost
+
+    def on_purchase(self, player):
+        super().on_purchase(player)
+        player.cash -= self.cost
+        send_wcs_saytext_by_index(self._msg_purchase, player.index)
+
+    def _force_drop_weapons(self, player):
+        for index in player.weapon_indexes(not_filters='knife'):
+            entity = Entity(index)
+            player.drop_weapon(entity.pointer, None, None)
+
+    @events('player_pre_victim')
+    def _on_pre_death_obtain_weapons(self, victim, **kwargs):
+        self.weapons = [Entity(index).class_name for index in victim.weapon_indexes(
+                not_filters='knife')
+            ]
+
+    @events('player_spawn')
+    def _on_respawn_give_weapons_and_remove(self, player, **kwargs):
+        self._force_drop_weapons(player)
+        for weapon in self.weapons:
+            player.delay(0.2, player.give_named_item, args=(weapon, ))
+
+        ## remove the item
+        player.items.remove(self)
+
+## scrollofrespawning declaration
+
+class ScrollOfRespawning(Item):
     category = "Enhancements"
     cost = 5000
     description = "Respawns you if you're dead, or respawns you when you die."
@@ -244,7 +328,7 @@ class HeartOfThePhoenix(Item):
         else:
             send_wcs_saytext_by_index(self._msg_purchase, player.index)
 
-    @events('player_death')
+    @events('player_death', 'player_suicide')
     def _on_player_death(self, player, **kwargs):
         Delay(1, player.spawn)
         Delay(1, send_wcs_saytext_by_index, args=(self._msg_instant, player.index))
