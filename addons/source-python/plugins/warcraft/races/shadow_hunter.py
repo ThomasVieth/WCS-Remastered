@@ -280,7 +280,7 @@ class BidBadVoodoo(Skill):
 
     @property
     def duration(self):
-        return 1 + (self.level * 0.5)
+        return 1 + (self.level * 0.3)
 
     _msg_a = '{{RED}}Bid Bad Voodoo {{PALE_GREEN}}is active for {{ORANGE}}{time} {{PALE_GREEN}}seconds!'
     _msg_b = '{RED}Bid Bad Voodoo {PALE_GREEN}is deactivating in {ORANGE}1 {PALE_GREEN}second!'
