@@ -107,6 +107,7 @@ def _spend_skills_say_command(command, index, team_only=None):
 @ClientCommand("changerace")
 @SayCommand("changerace")
 def _change_race_say_command(command, index, team_only=None):
+    player_dict[index].update_race_data()
     change_race_menu.send(index)
     return CommandReturn.BLOCK
 
