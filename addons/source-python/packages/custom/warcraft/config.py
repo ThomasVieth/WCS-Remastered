@@ -69,7 +69,7 @@ with ConfigManager("warcraft") as manager:
 
 	race_bot_options = manager.cvar(
 		"warcraft_race_maximum_level",
-		"Undead Scourge, Orcish Horde, Night Elf Hunter, Human Alliance",
+		"Undead Scourge, Human Alliance, Orcish Horde, Night Elves",
 		"The races that a bot may attain.",
 		ConVarFlags.NOTIFY
 	)
