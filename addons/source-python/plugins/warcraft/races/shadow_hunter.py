@@ -278,6 +278,10 @@ class BidBadVoodoo(Skill):
     def max_level(cls):
         return 6
 
+    @classmethod
+    def is_available(cls, player):
+        return player.race.level > 8
+
     @property
     def duration(self):
         return 1 + (self.level * 0.3)

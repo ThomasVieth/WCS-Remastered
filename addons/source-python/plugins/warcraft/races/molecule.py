@@ -151,6 +151,10 @@ class Forcefield(Skill):
     def max_level(cls):
         return 5
 
+    @classmethod
+    def is_available(cls, player):
+        return player.race.level > 8
+
     @property
     def duration(self):
         return 1 + (self.level * 0.4)

@@ -200,6 +200,10 @@ class DivineShield(Skill):
     def max_level(cls):
         return 4
 
+    @classmethod
+    def is_available(cls, player):
+        return player.race.level > 8
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

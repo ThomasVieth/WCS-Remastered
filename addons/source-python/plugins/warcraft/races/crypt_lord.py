@@ -170,6 +170,10 @@ class LocustSwarm(Skill):
     def max_level(cls):
         return 8
 
+    @classmethod
+    def is_available(cls, player):
+        return player.race.level > 8
+
     @property
     def health(self):
         return 35

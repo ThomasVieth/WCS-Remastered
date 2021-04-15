@@ -388,6 +388,10 @@ class CuringRitual(Skill):
     def max_level(cls):
         return 6
 
+    @classmethod
+    def is_available(cls, player):
+        return player.race.level > 8
+
     @property
     def time(self):
         return 15 - (0.5 * self.level)

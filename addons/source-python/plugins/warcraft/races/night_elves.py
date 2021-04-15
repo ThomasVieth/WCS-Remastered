@@ -147,6 +147,10 @@ class EntanglingRoots(Skill):
     def max_level(cls):
         return 8
 
+    @classmethod
+    def is_available(cls, player):
+        return player.race.level > 8
+
     @property
     def range(self):
         return 225 + ((self.level - 1) * 25)

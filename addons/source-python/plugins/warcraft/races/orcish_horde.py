@@ -224,6 +224,10 @@ class ChainLightning(Skill):
     def max_level(cls):
         return 8
 
+    @classmethod
+    def is_available(cls, player):
+        return player.race.level > 8
+
     _msg_a = '{GREEN}Chain Lightning {RED}hit enemies{PALE_GREEN}!'
     _msg_c = '{{GREEN}}Chain Lightning {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
     _msg_f = '{GREEN}Chain Lightning {PALE_GREEN}found {DULL_RED}no enemies{PALE_GREEN}!'

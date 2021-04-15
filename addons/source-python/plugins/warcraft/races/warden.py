@@ -236,6 +236,10 @@ class Restoration(Skill):
     def max_level(cls):
         return 8
 
+    @classmethod
+    def is_available(cls, player):
+        return player.race.level > 8
+
     @property
     def time(self):
         return 36 - (2 * self.level)
