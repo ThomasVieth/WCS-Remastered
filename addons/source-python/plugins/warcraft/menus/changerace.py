@@ -39,7 +39,7 @@ def _on_change_race_build(menu, index):
                 )
             )
         else:
-            race_data = player._dbinstance.races.filter(dbRace.name == race_cls.name).first()
+            race_data = next(filter(lambda x: x.name == race_cls.name, player._dbinstance.races), None)
             menu.append(
                 PagedOption(
                     changerace_menu_strings['race_available'].get_string(

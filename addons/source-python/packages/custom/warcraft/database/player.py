@@ -24,11 +24,12 @@ databaselog_path = WARCRAFT_LOG_PATH / "database.log"
 ## player model declaration
 
 class Player(Base):
-	"""
-	"""
-	id = Column(Integer, Sequence('player_id_seq'), primary_key=True)
-	username = Column(Unicode(64))
-	steamid = Column(String(64))
-	current_race = Column(String(64))
-	last_active = Column(DateTime)
-	is_admin = Column(Boolean, default=False)
+    """
+    """
+    id = Column(Integer, Sequence('player_id_seq'), primary_key=True)
+    username = Column(Unicode(64))
+    steamid = Column(String(64))
+    current_race = Column(String(64))
+    last_active = Column(DateTime)
+    is_admin = Column(Boolean, default=False)
+    races = relationship("Race", back_populates="parent")

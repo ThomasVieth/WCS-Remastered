@@ -36,4 +36,4 @@ class Race(Base):
 		ForeignKey(Player.__tablename__ + ".id", ondelete="CASCADE"),
 		nullable=False
 	)
-	parent = relationship("Player", backref=backref("races", lazy="dynamic"))
+	parent = relationship("Player", back_populates="races")

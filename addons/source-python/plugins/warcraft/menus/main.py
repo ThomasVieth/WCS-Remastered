@@ -8,6 +8,8 @@ from menus import PagedMenu, PagedOption
 
 ## warcraft.package imports
 
+from warcraft.players import player_dict
+
 from ..translations import (
     changerace_menu_strings,
     home_menu_strings,
@@ -28,6 +30,8 @@ _main_menu_selections = []
 
 def _on_main_menu_select(menu, index, choice):
     if choice.value < len(_main_menu_selections):
+        if choice.value == 3:
+            player_dict[index].update_race_data()
         return _main_menu_selections[choice.value]
 
 ## menu declarations
