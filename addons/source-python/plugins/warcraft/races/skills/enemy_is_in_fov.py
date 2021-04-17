@@ -2,6 +2,10 @@
 
 """
 
+## python imports
+
+from math import atan2, degrees
+
 ## warcraft.package imports
 
 from warcraft.skill import Skill
@@ -18,10 +22,10 @@ class IsInFOVSkill(Skill):
     def fov(self):
         return 100
 
-    def is_in_fov(self, origin, target):
-        angle_radians = atan2(v2.y - v1.y, v2.x - v1.x)
+    def is_in_fov(self, player, target):
+        angle_radians = atan2(target.origin.y - player.origin.y, target.origin.x - player.origin.x)
         angle_degrees = degrees(angle_radians)
-        angle_diff = attacker.view_angle.y - angle_degrees
+        angle_diff = player.view_angle.y - angle_degrees
         if angle_diff > 180:
             angle_diff -= 360
 

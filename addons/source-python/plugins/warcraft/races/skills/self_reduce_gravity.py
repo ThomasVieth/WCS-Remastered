@@ -50,10 +50,12 @@ class ReduceGravitySkill(Skill):
             if self.state == player.move_type:
                 return
 
-            if self.state == MoveType.LADDER:
+            if self.state == MoveType.LADDER and self.level > 0:
                 Delay(0.5, self.reduce_gravity, args=(player, self.reduction))
             self.state = player.move_type
 
     @events('player_spawn')
     def _on_player_spawn(self, player, **kwargs):
+        if self.level == 0:
+            return
         Delay(0.5, self.reduce_gravity, args=(player, self.reduction))
