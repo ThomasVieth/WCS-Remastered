@@ -99,4 +99,4 @@ class LevelableXP(Levelable):
 	def required_experience(self):
 		""""""
 		level = max(self._level, 1)
-		return level * 80
+		return (3 * level * level) + 80
