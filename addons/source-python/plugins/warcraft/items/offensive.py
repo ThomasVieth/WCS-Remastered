@@ -114,6 +114,7 @@ class OrbOfFrost(Item):
 
     _msg_purchase = '{GREEN}Purchased {BLUE}Orb of Frost.'
 
+
     @classmethod
     def is_available(cls, player):
         item_count = sum(isinstance(item, cls) for item in player.items)
@@ -140,8 +141,8 @@ class OrbOfFrost(Item):
         current_speed = victim.speed
         victim.speed -= 0.6
         victim.is_slowed = True
-        victim.delay(self.duration, victim.__setattr__, args=('speed', current_speed))
-        Delay(self.duration, victim.__setattr__, args=('is_slowed', False))
+        victim.delay(2, victim.__setattr__, args=('speed', current_speed))
+        Delay(2, victim.__setattr__, args=('is_slowed', False))
 
     @events('player_death', 'player_suicide')
     def _on_player_death(self, player, **kwargs):
