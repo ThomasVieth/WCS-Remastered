@@ -28,11 +28,11 @@ from warcraft.utility import classproperty, CooldownDict
 
 ## warcraft.skills imports
 
-from .skills.self_set_invisibility import InvisibilitySkill as _InvisibilitySkill
-from .skills.enemy_remove_invisibility import RemoveInvisibilitySkill
-from .skills.team_add_health import TeamAddHealthSkill
-from .skills.enemy_shake import ShakeSkill
-from .skills.self_teleport import TeleportSkill
+from ..skills.self_set_invisibility import InvisibilitySkill as _InvisibilitySkill
+from ..skills.enemy_remove_invisibility import RemoveInvisibilitySkill
+from ..skills.team_add_health import TeamAddHealthSkill
+from ..skills.enemy_shake import ShakeSkill
+from ..skills.self_teleport import TeleportSkill
 
 ## __all__ declaration
 

@@ -48,6 +48,14 @@ class Panorama(Race):
     def requirement_sort_key(cls):
         return 16
 
+    @classmethod
+    def is_available(cls, player):
+        return player.total_level > 200
+
+    @classproperty
+    def requirement_string(cls):
+        return "Total Level 200"
+
 
 @Panorama.add_skill
 class WallClimb(Skill):
@@ -146,7 +154,7 @@ class Rematch(Skill):
         if self.level == 0:
             return
             
-        if randint(1, 101) <= self.chance:
+        if randint(1, 101) <= 100:##self.chance:
             player.delay(1, player.spawn)
             player.delay(1.5, self._force_drop_weapons, args=(player, ))
             for weapon in self.weapons:

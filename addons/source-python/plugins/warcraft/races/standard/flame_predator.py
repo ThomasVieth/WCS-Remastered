@@ -20,7 +20,7 @@ from warcraft.utility import classproperty
 
 ## warcraft.skills imports
 
-from .skills.self_reduce_gravity import ReduceGravitySkill
+from ..skills.self_reduce_gravity import ReduceGravitySkill
 
 ## __all__ declaration
 

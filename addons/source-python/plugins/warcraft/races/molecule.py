@@ -47,6 +47,14 @@ class Molecule(Race):
     def requirement_sort_key(cls):
         return 15
 
+    @classmethod
+    def is_available(cls, player):
+        return player.total_level > 180
+
+    @classproperty
+    def requirement_string(cls):
+        return "Total Level 180"
+
 
 @Molecule.add_skill
 class Speed(AddSpeedSkill):
