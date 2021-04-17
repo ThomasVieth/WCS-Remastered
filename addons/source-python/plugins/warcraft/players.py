@@ -57,9 +57,12 @@ class Player(SPPlayer):
 
 		## Validate race data and load.
 		race_cls = Race.find_race(player_data.current_race)
-		if not race_cls:
+		if not race_cls: ## Goto configured race.
 			error(playerslog_path, f"Could not use configured value of {player_data.current_race} as default race.")
 			race_cls = Race.default
+		if not race_cls:
+			error(playerslog_path, f"Could not use configured default race as was non-existent.")
+			race_cls = Race.subclasses[0]
 		race_data = self.get_race_data(race_cls)
 		self.race = self.init_race_from_data(race_cls, race_data)
 
@@ -234,5 +237,5 @@ def on_client_fully_connect(index):
 @OnClientDisconnect
 def _player_cleanup(index):
 	player = player_dict[index]
-	player.call_events("player_death", player=player)
+	player.call_events("player_death", player=player, attacker=None)
 	player.update_race_data()
