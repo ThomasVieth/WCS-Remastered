@@ -101,7 +101,7 @@ class BeltOfVitality(Item):
         send_wcs_saytext_by_index(self._msg_purchase, player.index)
 
     def on_cycle(self, player):
-        if player.health < 100:
+        if player.health < 175:
             player.health += 5
 
     @events('player_death', 'player_suicide')

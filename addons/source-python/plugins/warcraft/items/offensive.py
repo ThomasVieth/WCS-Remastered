@@ -9,6 +9,7 @@ from random import randint
 ## source.python imports
 
 from effects.base import TempEntity
+from listeners.tick import Repeat
 
 ## warcraft.package imports
 
@@ -26,7 +27,8 @@ __all__ = (
     "OrbOfFrost",
     "Flamethrower",
     "MaskOfDeath",
-    "BlowUpBaby"
+    "BlowUpBaby",
+    "GlovesOfWarmth"
 )
 
 ## dustofappearnence declaration
@@ -94,8 +96,8 @@ class ClawsOfAttack(Item):
         player.cash -= self.cost
         send_wcs_saytext_by_index(self._msg_purchase, player.index)
 
-    @events('player_attack')
-    def _on_player_attack(self, info, weapon, **kwargs):
+    @events('player_pre_attack')
+    def _on_player_pre_attack(self, info, weapon, **kwargs):
         if weapon == "weapon_knife":
             extra_damage = randint(15, 29)
             info.damage += extra_damage
@@ -272,5 +274,43 @@ class BlowUpBaby(Item):
 
         self.explosion.create(origin=player.origin)
 
+        ## remove the item
+        player.items.remove(self)
+
+## glovesofwarmth declaration
+
+class GlovesOfWarmth(Item):
+    category = "Offensive"
+    cost = 3750
+    description = "Replenish a HE Grenade every 10 seconds."
+
+    _msg_purchase = '{GREEN}Purchased {BLUE}Gloves of Warmth.'
+
+    @classmethod
+    def is_available(cls, player):
+        item_count = sum(isinstance(item, cls) for item in player.items)
+        return player.cash >= cls.cost and not player.dead and item_count < 1
+
+    @classproperty
+    def requirement_string(cls):
+        return "${}".format(cls.cost)
+
+    @classproperty
+    def requirement_sort_key(cls):
+        return cls.cost
+
+    def on_purchase(self, player):
+        super().on_purchase(player)
+        player.cash -= self.cost
+        self.repeater = Repeat(self.on_cycle, args=(player, ))
+        self.repeater.start(10)
+        send_wcs_saytext_by_index(self._msg_purchase, player.index)
+
+    def on_cycle(self, player):
+        player.give_named_item("weapon_hegrenade")
+
+    @events('player_death', 'player_suicide')
+    def _on_player_death(self, player, **kwargs):
+        self.repeater.stop()
         ## remove the item
         player.items.remove(self)

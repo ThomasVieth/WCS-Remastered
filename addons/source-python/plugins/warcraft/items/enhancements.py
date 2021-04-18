@@ -26,7 +26,8 @@ __all__ = (
     "Longjump",
     "CloakOfShadows",
     "AnkhOfReincarnation",
-    "ScrollOfRespawning"
+    "ScrollOfRespawning",
+    "Amulet of the Cat"
 )
 
 ## bootsofspeed declaration
@@ -333,4 +334,31 @@ class ScrollOfRespawning(Item):
         Delay(1, player.spawn)
         Delay(1, send_wcs_saytext_by_index, args=(self._msg_instant, player.index))
         ## remove the item
+        player.items.remove(self)
+
+## amuletofthecat
+
+class AmuletOfTheCat(Item):
+    category = "Enhancements"
+    cost = 1500
+    description = "Mutes your footsteps to enemies. Crouch to enable (once)."
+
+    _msg_purchase = '{GREEN}Purchased {BLUE}Amulet of the Cat.'
+
+    @classmethod
+    def is_available(cls, player):
+        item_count = sum(isinstance(item, cls) for item in player.items)
+        return player.cash >= cls.cost and item_count < 1
+
+    @classproperty
+    def requirement_string(cls):
+        return "${}".format(cls.cost)
+
+    @classproperty
+    def requirement_sort_key(cls):
+        return cls.cost
+
+    def on_purchase(self, player):
+        super().on_purchase(player)
+        player.set_property_int("m_fFlags", 2)
         player.items.remove(self)
