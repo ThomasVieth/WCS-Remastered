@@ -9,6 +9,8 @@ from random import randint
 
 ## source.python imports
 
+from colors import Color
+from listeners.tick import Delay
 from messages import Fade
 
 ## warcraft.package imports
@@ -75,7 +77,7 @@ class BalanceOfDark(Skill):
         if randint(0, 101) > self.chance or self.level == 0:
             return
 
-        Fade(self.duration - 2, self.duration - (self.level * 0.5)).send(victim.index)
+        Fade(int(self.duration - 2), int(self.duration - (self.level * 0.5)), Color(0, 0, 0)).send(victim.index)
         send_wcs_saytext_by_index(self._msg_blind.format(name=victim.name), attacker.index)
 
 
@@ -131,9 +133,9 @@ class Balance(Skill):
     def calc_health(self, player):
         return 30 + (self.level * 5)
 
-    _msg_b = '{{GREY}}Balance {{GREEN}}healed {{PALE_GREEN}}you for {{GREEN}}{health}HP{{PALE_GREEN}}.'
-    _msg_c = '{{GREY}}Balance {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
-    _msg_f1 = '{GREY}Balance {RED}failed {PALE_GREEN}due to you cannot gain more {GREEN}HP{PALE_GREEN}.'
+    _msg_b = '{{GRAY}}Balance {{GREEN}}healed {{PALE_GREEN}}you for {{GREEN}}{health}HP{{PALE_GREEN}}.'
+    _msg_c = '{{GRAY}}Balance {{PALE_GREEN}}is on cooldown for {{DULL_RED}}{time:0.1f} {{PALE_GREEN}}seconds.'
+    _msg_f1 = '{GRAY}Balance {RED}failed {PALE_GREEN}due to you cannot gain more {GREEN}HP{PALE_GREEN}.'
 
     @events('player_spawn')
     def _on_player_spawn_reset(self, player, **eargs):
