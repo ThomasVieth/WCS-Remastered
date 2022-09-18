@@ -12,14 +12,14 @@ __all__ = (
     "admin_strings",
     "admin_menu_strings",
     "categories_strings",
-	"changerace_menu_strings",
-	"experience_strings",
-	"home_menu_strings",
-	"playerinfo_menu_strings",
+    "changerace_menu_strings",
+    "experience_strings",
+    "home_menu_strings",
+    "playerinfo_menu_strings",
     "shopinfo_menu_strings",
     "shop_menu_strings",
-	"raceinfo_menu_strings",
-	"spendskills_menu_strings"
+    "raceinfo_menu_strings",
+    "spendskills_menu_strings"
 )
 
 ## translation loading
