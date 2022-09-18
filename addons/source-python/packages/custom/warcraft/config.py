@@ -24,7 +24,8 @@ __all__ = (
 	"experience_punish_for_loss",
 	"experience_for_plant",
 	"experience_for_explode",
-	"experience_for_defuse"
+	"experience_for_defuse",
+	"experience_for_level_difference_cap"
 )
 
 ## config declaration
@@ -95,6 +96,13 @@ with ConfigManager("warcraft") as manager:
 		"warcraft_experience_for_level_difference",
 		5,
 		"The experience gained for killing a higher level player (per level).",
+		ConVarFlags.NOTIFY
+	)
+
+	experience_for_level_difference_cap =  manager.cvar(
+		"warcraft_experience_for_level_difference_cap",
+		500,
+		"The max experience gained for killing another player.",
 		ConVarFlags.NOTIFY
 	)
 

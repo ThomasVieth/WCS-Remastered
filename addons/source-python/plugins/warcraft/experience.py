@@ -13,6 +13,7 @@ from warcraft.config import (
     experience_for_kill,
     experience_for_headshot,
     experience_for_level_difference,
+    experience_for_level_difference_cap,
     experience_for_win,
     experience_for_loss,
     experience_punish_for_loss,
@@ -87,7 +88,8 @@ def _on_player_died_give_experience(event_data):
     victim = player_dict.from_userid(event_data['userid'])
     difference = victim.race.level - attacker.race.level
     if difference > 0:
-        amount = difference * experience_for_kill.cvar.get_int()
+        amount = min(difference * experience_for_kill.cvar.get_int(), experience_for_level_difference_cap.cvar.get_int())
+        attacker.race.experience_up(amount)
         experience_up_message.send(attacker.index, amount=amount, reason=higher_level_reason)
 
     if assister:
