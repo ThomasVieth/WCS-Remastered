@@ -69,7 +69,7 @@ class HealingWave(Skill):
 
     @classproperty
     def max_level(cls):
-        return 6
+        return 8
 
     @property
     def health(self):
@@ -81,7 +81,7 @@ class HealingWave(Skill):
 
     @property
     def duration(self):
-        return 5 - (self.level / 2)
+        return max(5 - (self.level / 2), 2)
 
     @property
     def range(self):
@@ -117,11 +117,11 @@ class Hex(Skill):
 
     @classproperty
     def description(cls):
-        return '10% chance to slow your enemy for 1-3 seconds.'
+        return '10% chance to slow your enemy for 1-4 seconds.'
 
     @classproperty
     def max_level(cls):
-        return 6
+        return 8
 
     @property
     def duration(self):
@@ -166,11 +166,11 @@ class SerpentWard(Skill):
 
     @classproperty
     def description(cls):
-        return 'Place 1-2 serpent wards, dealing 5-10 damage per second to enemies within their range. Ability.'
+        return 'Place 1-2 serpent wards, dealing 8-24 damage per second to enemies within their range. Ability.'
 
     @classproperty
     def max_level(cls):
-        return 6
+        return 8
 
     _msg_a = '{PALE_GREEN}You created a {BLUE}Serpent Ward {PALE_GREEN}at your {GREEN}location{PALE_GREEN}.'
     _msg_f = '{PALE_GREEN}You {DULL_RED}cannot {PALE_GREEN}create more {BLUE}Serpent Wards{PALE_GREEN}.'
@@ -181,7 +181,7 @@ class SerpentWard(Skill):
 
     @property
     def damage(self):
-        return 8 + self.level
+        return 8 + (self.level * 2)
 
     @property
     def duration(self):
