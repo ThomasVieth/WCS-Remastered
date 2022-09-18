@@ -9,7 +9,7 @@ from random import randint
 ## warcraft.package imports
 
 from warcraft.commands.messages import send_wcs_saytext_by_index
-from warcraft.item import Item
+from warcraft.item import Item, ItemCategory
 from warcraft.utility import classproperty
 
 ## __all__ declaration
