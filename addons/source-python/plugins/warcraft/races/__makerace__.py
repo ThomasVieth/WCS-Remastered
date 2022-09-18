@@ -1,11 +1,11 @@
 ## -- CONFIG --
 
-racename = "Terminator"
+racename = "Test Race"
 level_req = 0
 
-skills = "Laser Bullets|Metallic Skin|Organic Skin|Short Curt"
-skill_descriptions = "You gun coming in future and bullets are laser(Extra damage)|Regenation some you healt back.|You skin change a enemy skin.|When you die you body explosion."
-skill_cfg = "player_attack|player_spawn|player_spawn|player_death"
+skills = "Skill1|Skill2|Skill3|Skill4"
+skill_descriptions = "SkillDesc1|SkillDesc2|SkillDesc3|SkillDesc4"
+skill_cfg = "player_pre_attack|player_spawn|player_spawn|player_attack|player_death"
 skill_needed = "0|0|0|8"
 
 ## -- DO NOT EDIT --
