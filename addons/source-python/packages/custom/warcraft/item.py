@@ -14,13 +14,23 @@ itemlog_path = WARCRAFT_LOG_PATH / "items.log"
 
 ## __all__ declaration
 
-__all__ = ("Item", )
+__all__ = ("Item", "ItemCategory", )
+
+## item category class declaration
+
+class ItemCategory:
+    """Todo: Probably should be a tuple. Please ignore the lack of efficiency."""
+
+    def __init__(self, name, sort_key):
+        self.name = name
+        self.sort_key = sort_key
 
 ## item class declaration
 
 class Item(CallbackHandler, NamingHandler, SubclassFinder):
     """"""
     __categories = set()
+    category = ItemCategory("No Category", sort_key=99)
     cost = 0
 
     def __init__(self, parent=None, *args, **kwargs):
@@ -62,14 +72,14 @@ class Item(CallbackHandler, NamingHandler, SubclassFinder):
     def categories(cls):
         if len(cls.__categories) == 0:
             for subcls in cls.iter_subclasses():
-                if hasattr(subcls, "category"):
-                    cls.__categories.add(subcls.category)
-        return cls.__categories
+                cls.__categories.add(subcls.category)
+        sorted_categories = sorted(cls.__categories, key=lambda category: category.sort_key)
+        return list(map(cls.__categories, lambda category: category.name))
 
     @classmethod
     def iter_items_in_category(cls, category):
         for subcls in cls.iter_subclasses():
-            if subcls.category == category:
+            if subcls.category.name == category:
                 yield subcls
 
     @classmethod

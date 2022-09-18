@@ -22,10 +22,14 @@ __all__ = (
     "TomeOfInsight"
 )
 
+## category definition
+
+experience_category = ItemCategory("Experience & Levels", sort_key=3)
+
 ## scrollofknowledge declaration
 
 class ScrollOfKnowledge(Item):
-    category = "Experience & Levels"
+    category = experience_category
     cost = 1750
     description = "Gives you 50% chance to receive 50 or 100 experience."
 
@@ -59,7 +63,7 @@ class ScrollOfKnowledge(Item):
 ## tomeofminorexperience declaration
 
 class TomeOfMinorExperience(Item):
-    category = "Experience & Levels"
+    category = experience_category
     cost = 2500
     description = "Grants your current race 100 experience."
 
@@ -87,7 +91,7 @@ class TomeOfMinorExperience(Item):
 ## tomeoflesserexperience declaration
 
 class TomeOfLesserExperience(Item):
-    category = "Experience & Levels"
+    category = experience_category
     cost = 5000
     description = "Grants your current race 200 experience."
 
@@ -115,7 +119,7 @@ class TomeOfLesserExperience(Item):
 ## tomeofgreaterexperience declaration
 
 class TomeOfGreaterExperience(Item):
-    category = "Experience & Levels"
+    category = experience_category
     cost = 10000
     description = "Grants your current race 400 experience."
 
@@ -143,7 +147,7 @@ class TomeOfGreaterExperience(Item):
 ## tomeofinsight declaration
 
 class TomeOfInsight(Item):
-    category = "Experience & Levels"
+    category = experience_category
     cost = 12000
     description = "Receive 1 level in your current race."
 

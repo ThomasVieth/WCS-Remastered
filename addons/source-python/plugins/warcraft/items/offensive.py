@@ -14,7 +14,7 @@ from listeners.tick import Repeat
 ## warcraft.package imports
 
 from warcraft.commands.messages import send_wcs_saytext_by_index
-from warcraft.item import Item
+from warcraft.item import Item, ItemCategory
 from warcraft.players import player_dict
 from warcraft.registration import events, clientcommands
 from warcraft.utility import classproperty
@@ -31,10 +31,14 @@ __all__ = (
     "GlovesOfWarmth"
 )
 
+## category definition
+
+offensive_category = ItemCategory("Offensive", sort_key=0)
+
 ## dustofappearnence declaration
 
 class DustOfAppearence(Item):
-    category = "Offensive"
+    category = offensive_category
     cost = 1500
     description = "Your attacks makes your victims visible again."
 
@@ -72,7 +76,7 @@ class DustOfAppearence(Item):
 ## clawsofattack declaration
 
 class ClawsOfAttack(Item):
-    category = "Offensive"
+    category = offensive_category
     cost = 2500
     description = "Your melee attacks deals 15-28 more damage."
 
@@ -110,7 +114,7 @@ class ClawsOfAttack(Item):
 ## orboffrost declaration
 
 class OrbOfFrost(Item):
-    category = "Offensive"
+    category = offensive_category
     cost = 3500
     description = "Attacking an enemy makes them 60% slower. 33% chance."
 
@@ -155,7 +159,7 @@ class OrbOfFrost(Item):
 ## flamethrower declaration
 
 class Flamethrower(Item):
-    category = "Offensive"
+    category = offensive_category
     cost = 5000
     description = "Your attacks sets your target ablaze for 3 seconds."
 
@@ -191,7 +195,7 @@ class Flamethrower(Item):
 ## mask of death
 
 class MaskOfDeath(Item):
-    category = "Offensive"
+    category = offensive_category
     cost = 3200
     description = "Leeches 20% of damage you do. 40% chance."
 
@@ -228,7 +232,7 @@ class MaskOfDeath(Item):
 ## blow up baby
 
 class BlowUpBaby(Item):
-    category = "Offensive"
+    category = offensive_category
     cost = 5000
     description = "Explode when die."
 
@@ -280,7 +284,7 @@ class BlowUpBaby(Item):
 ## glovesofwarmth declaration
 
 class GlovesOfWarmth(Item):
-    category = "Offensive"
+    category = offensive_category
     cost = 3750
     description = "Replenish a HE Grenade every 10 seconds."
 

@@ -13,7 +13,7 @@ from listeners.tick import Repeat
 ## warcraft.package imports
 
 from warcraft.commands.messages import send_wcs_saytext_by_index
-from warcraft.item import Item
+from warcraft.item import Item, ItemCategory
 from warcraft.registration import events, clientcommands
 from warcraft.utility import classproperty
 
@@ -27,10 +27,14 @@ __all__ = (
     "NecklaceOfImmunity"
 )
 
+## category definition
+
+defensive_category = ItemCategory("Defensive", sort_key=1)
+
 ## mithrilarmor declaration
 
 class MithrilArmor(Item):
-    category = "Defensive"
+    category = defensive_category
     cost = 1750
     description = "Reduces damage taken from enemy attacks by 6-10 health."
 
@@ -74,7 +78,7 @@ class MithrilArmor(Item):
 ## beltofvitality declaration
 
 class BeltOfVitality(Item):
-    category = "Defensive"
+    category = defensive_category
     cost = 2500
     description = "If low on health you'll slowly regenerate your health back up."
 
@@ -113,7 +117,7 @@ class BeltOfVitality(Item):
 ## ringofdefense declaration
 
 class RingOfDefense(Item):
-    category = "Defensive"
+    category = defensive_category
     cost = 2500
     description = "Increases your armor by 125."
 
@@ -150,7 +154,7 @@ class RingOfDefense(Item):
 ## gemoflife declaration
 
 class GemOfLife(Item):
-    category = "Defensive"
+    category = defensive_category
     cost = 3000
     description = "Grants you an additional 50 health."
 
@@ -188,7 +192,7 @@ class GemOfLife(Item):
 ## necklaceofimmunity declaration
 
 class NecklaceOfImmunity(Item):
-    category = "Defensive"
+    category = defensive_category
     cost = 1200
     description = "Protects you from ultimates."
 

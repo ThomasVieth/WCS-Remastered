@@ -14,7 +14,7 @@ from players.constants import PlayerButtons
 ## warcraft.package imports
 
 from warcraft.commands.messages import send_wcs_saytext_by_index
-from warcraft.item import Item
+from warcraft.item import Item, ItemCategory
 from warcraft.registration import events, clientcommands
 from warcraft.utility import classproperty
 
@@ -30,10 +30,14 @@ __all__ = (
     "Amulet of the Cat"
 )
 
+## category definition
+
+enhancements_category = ItemCategory("Enhancements", sort_key=2)
+
 ## bootsofspeed declaration
 
 class BootsOfSpeed(Item):
-    category = "Enhancements"
+    category = enhancements_category
     cost = 2500
     description = "Increases your speed by 25% of the base speed."
 
@@ -70,7 +74,7 @@ class BootsOfSpeed(Item):
 ## gryphonfeather declaration
 
 class GryphonFeather(Item):
-    category = "Enhancements"
+    category = enhancements_category
     cost = 2500
     description = "Reduces your base gravity by 35%."
 
@@ -136,7 +140,7 @@ class GryphonFeather(Item):
 ## longjump declaration
 
 class Longjump(Item):
-    category = "Enhancements"
+    category = enhancements_category
     cost = 3000
     description = "Increases the length of your jumps."
 
@@ -177,7 +181,7 @@ class Longjump(Item):
 ## cloakofshadows declaration
 
 class CloakOfShadows(Item):
-    category = "Enhancements"
+    category = enhancements_category
     cost = 3500
     description = "Causes you to become 70% invisible."
 
@@ -221,7 +225,7 @@ class CloakOfShadows(Item):
 ## secondaryclipenhancer declaration
 
 class SecondaryClipEnhancer(Item):
-    category = "Enhancements"
+    category = enhancements_category
     cost = 400
     description = "Gives you a 50 bullet clip for your secondary weapon."
 
@@ -248,7 +252,7 @@ class SecondaryClipEnhancer(Item):
 ## ankhofreincarnation declaration
 
 class AnkhOfReincarnation(Item):
-    category = "Enhancements"
+    category = enhancements_category
     cost = 2000
     description = "Weapons are saved upon death and given to you on spawn."
 
@@ -299,7 +303,7 @@ class AnkhOfReincarnation(Item):
 ## scrollofrespawning declaration
 
 class ScrollOfRespawning(Item):
-    category = "Enhancements"
+    category = enhancements_category
     cost = 5000
     description = "Respawns you if you're dead, or respawns you when you die."
 
@@ -339,7 +343,7 @@ class ScrollOfRespawning(Item):
 ## amuletofthecat
 
 class AmuletOfTheCat(Item):
-    category = "Enhancements"
+    category = enhancements_category
     cost = 1500
     description = "Mutes your footsteps to enemies. Crouch to enable (once)."
 
