@@ -20,7 +20,7 @@ from messages import SayText2, ShowMenu
 
 ## warcraft.package imports
 
-from warcraft.config import race_bot_options
+from warcraft.config import administration_steamids, race_bot_options
 from warcraft.database import session
 from warcraft.events import Event as WCEvent
 from warcraft.race import Race
@@ -42,10 +42,6 @@ from .extensions import *
 from .menus import *
 from .players import player_dict
 from .translations import admin_strings
-
-## constants
-
-ADMINS = ["STEAM_1:0:120220385"]
 
 ## saving data
 
@@ -121,7 +117,8 @@ def _main_menu_say_command(command, index, team_only=None):
 @SayCommand("wcsadmin")
 def _admin_menu_say_command(command, index, team_only=None):
     player = player_dict[index]
-    if player.steamid in ADMINS:
+    steamids = administration_steamids.cvar.get_string()
+    if player.steamid in steamids.split(','):
         admin_menu.send(index)
     else:
         admin_failed_message.send(index)

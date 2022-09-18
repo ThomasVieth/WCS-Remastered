@@ -10,6 +10,7 @@ from config.manager import ConfigManager
 ## __all__ declaration
 
 __all__ = (
+	"administration_steamids",
 	"logging_level",
 	"default_race",
 	"race_minimum_level",
@@ -137,5 +138,14 @@ with ConfigManager("warcraft") as manager:
 		"warcraft_experience_for_defuse",
 		30,
 		"The experience gained for defusing the bomb.",
+		ConVarFlags.NOTIFY
+	)
+
+	administration_section = manager.section("Administration Configuration")
+
+	administration_steamids =  manager.cvar(
+		"warcraft_administration_steamids",
+		"STEAM_1:0:120220385,STEAM_1:0:15921074",
+		"The steamids that have access to the Admin menu.",
 		ConVarFlags.NOTIFY
 	)
